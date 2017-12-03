@@ -7,7 +7,7 @@ from utils import multi_dot
 
 class RowOpsTest(unittest.TestCase):
     """
-    Tests for elementary row operations.
+    Tests elementary row operations.
     """
 
     def test_permute_full(self):
@@ -31,6 +31,13 @@ class RowOpsTest(unittest.TestCase):
         expected = T[[2, 1, 0, 3, 4, 5, 6, 7], :]
 
         self.assertTrue(np.allclose(expected, actual))
+
+    def test_permute_throws_exception(self):
+        T = np.random.randn(3, 3)
+        idx = [(3, 1)]
+        self.assertRaises(AssertionError, row_ops.permute, T.shape[0], idx)
+        idx = [0, 3, 1]
+        self.assertRaises(AssertionError, row_ops.permute, T.shape[0], idx)
 
     def test_scale_full(self):
         T = np.random.randn(3, 3)

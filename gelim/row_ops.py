@@ -33,6 +33,12 @@ def permute(N, idx):
 
     # convert to standard form
     if nested:
+
+        # ensure that idx does not exceed size of A
+        flat_idx = [i for sublist in idx for i in sublist]
+        error_msg = "[!] Indices cannot exceed {}.".format(N)
+        assert (np.max(flat_idx) < N), error_msg
+
         before = [i[0] for i in idx]
         after = [i[1] for i in idx]
 
@@ -43,12 +49,6 @@ def permute(N, idx):
     # ensure that idx does not exceed size of A
     error_msg = "[!] Indices cannot exceed {}.".format(N)
     assert (np.max(idx) < N), error_msg
-
-    # ================================================ #
-    # the numpy way of doing this is using A[idx, :]
-    # but for the sake of learning, i'm selecting the
-    # rows of A using the matrix P
-    # ================================================ #
 
     # construct permutation matrix
     P = basis_arr(idx, N)

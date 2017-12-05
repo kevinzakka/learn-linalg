@@ -64,4 +64,4 @@ Ax = b
         - full pivoting: iterate over the entire matrix and permute both rows and columns such
           that diagonal has largest possible values. (way more expensive)
 
-For columns instead of rows, just do `np.dot(P.T, A.T).T`.
+For columns instead of rows, postmultiply A by the permutation matrix `np.dot(A, P)`.

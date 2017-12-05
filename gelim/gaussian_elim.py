@@ -1,6 +1,5 @@
 import numpy as np
 
-from utils import multi_dot
 from row_ops import permute, scale, eliminate
 
 
@@ -49,7 +48,7 @@ class GaussElim(object):
     def __init__(self, A, b, pivoting=None):
         self.A = A
         self.b = b
-        self.ops = []
+        self.M = np.eye(A.shape[0])
 
         # ensure correct pivoting provided
         error_msg = "[!] Invalid pivoting option."
@@ -62,71 +61,106 @@ class GaussElim(object):
 
         for i in range(num_rows):
 
-            # strategy for the first row
-            if i == 0:
-                # if left-most element is nonzero choose it
-                if self.A[i, 0] != 0:
-                    self.pivot = self.A[i, 0]
-                # else just switch with any row underneath that has nonzero
-                else:
-                    # find the index of row to switch with
-                    for k in range(i+1, num_rows):
-                        if self.A[k, 0] != 0:
-                            break
-
-                    # use permutation matrix to switch
-                    P = permute(num_rows, [(i, k)])
-                    self.A = np.dot(P, self.A)
-                    self.ops.append(P)
-
-                    # now pivot is in upper left corner
-                    self.pivot = self.A[i, 0]
+            # precheck to see if work is done for this iter
+            done = True
+            if self.A[i, i] == 1:
+                for k in range(i+1, num_rows):
+                    if self.A[k, i] != 0:
+                        done = False
             else:
-                # strategy for remaining rows
-                self.pivot = None
+                done = False
 
-                if self.pivoting is None:
-                    # look through columns of row to find first nonzero element
-                    for j in range(1, num_cols):
-                        if self.A[i, j] != 0:
-                            self.pivot = self.A[i, j]
-                            break
+            if done:
+                continue
 
-                elif self.pivoting == 'partial':
-                    # as before, look through column for first nonzero element
-                    for j in range(1, num_cols):
-                        if self.A[i, j] != 0:
-                            pivot_val = np.abs(self.A[i, j])
-                            pivot_row = i
+            # if left-most element is nonzero choose it
+            if self.A[i, i] != 0:
+                self.pivot = self.A[i, i]
+            # else just switch with any row underneath that has nonzero
+            else:
+                # find the index of row to switch with
+                for k in range(i+1, num_rows):
+                    if self.A[k, i] != 0:
+                        break
+
+                if k == num_rows - 1:
+                    raise Exception("Such a system is inconsistent!")
+                    return
+
+                # use permutation matrix to switch
+                P = permute(num_rows, [(i, k)])
+                self.A = np.dot(P, self.A)
+                self.M = np.dot(P, self.M)
+
+            # now we determine the pivot based on pivoting strategy
+            self.pivot = None
+
+            if self.pivoting is None:
+                self.pivot = self.A[i, i]
+
+            elif self.pivoting == 'partial':
+                pivot_val = np.abs(self.A[i, i])
+                pivot_row = i
+                pivot_col = i
+
+                # last row does not need partial pivoting
+                if i != num_rows - 1:
+
+                    # look underneath and find bigger pivot if it exists
+                    for k in range(i+1, num_rows):
+                        if np.abs(self.A[k, pivot_col]) > pivot_val:
+                            pivot_val = np.abs(self.A[k, pivot_col])
+                            pivot_row = k
+
+                    # switch current row with row containing max
+                    if pivot_row != i:
+                        P = permute(num_rows, [(i, pivot_row)])
+                        self.A = np.dot(P, self.A)
+                        self.M = np.dot(P, self.M)
+
+                self.pivot = self.A[i, pivot_col]
+
+            # full pivoting
+            else:
+                pivot_val_col = self.A[i, i]
+                pivot_val_row = self.A[i, i]
+                pivot_row = i
+                pivot_col = i
+
+                # last row does not need full pivoting
+                if i != num_rows - 1:
+
+                    # look through right of row for largest pivot
+                    for j in range(i+1, num_cols):
+                        if np.abs(self.A[i, j]) > pivot_val_col:
+                            pivot_val_col = np.abs(self.A[i, j])
                             pivot_col = j
-                            break
 
-                    # last row does not need partial pivoting
-                    if i != num_rows - 1:
+                    # look through bottom of col for largest pivot
+                    for k in range(i+1, num_rows):
+                        if np.abs(self.A[k, i]) > pivot_val_row:
+                            pivot_val_row = np.abs(self.A[k, i])
+                            pivot_row = k
 
-                        # look underneath and find bigger pivot if it exists
-                        for k in range(i+1, num_rows):
-                            if np.abs(self.A[k, pivot_col]) > pivot_val:
-                                pivot_val = np.abs(self.A[k, pivot_col])
-                                pivot_row = k
-
-                        # switch current row with row containing max
-                        if pivot_row != i:
+                    # switch current row with row containing max
+                    if pivot_row != i or pivot_col != i:
+                        # choose the largest of both
+                        if pivot_val_col < pivot_val_row:
                             P = permute(num_rows, [(i, pivot_row)])
                             self.A = np.dot(P, self.A)
-                            self.ops.append(P)
+                            self.M = np.dot(P, self.M)
+                        else:
+                            P = permute(num_rows, [(i, pivot_col)])
+                            self.A = np.dot(self.A, P)
+                            self.M = np.dot(self.M, P)
 
-                    self.pivot = self.A[i, pivot_col]
-
-                # full pivoting
-                else:
-                    pass
+                self.pivot = self.A[i, i]
 
             # scale the row containing pivot to make 1
             scale_factor = 1. / self.pivot
             S = scale(num_rows, [(i, scale_factor)])
             self.A = np.dot(S, self.A)
-            self.ops.append(S)
+            self.M = np.dot(S, self.M)
 
             if i != num_rows - 1:
                 # eliminate all elements in column underneath pivot
@@ -141,7 +175,7 @@ class GaussElim(object):
                         # scale row i by this factor and add it to row k
                         E = eliminate(num_rows, i, scale_factor, k)
                         self.A = np.dot(E, self.A)
-                        self.ops.append(E)
+                        self.M = np.dot(E, self.M)
 
     def back_sub(self):
         num_rows, num_cols = self.A.shape
@@ -160,18 +194,13 @@ class GaussElim(object):
                     # scale row i by this factor and add it to row k
                     E = eliminate(num_rows, i, scale_factor, k)
                     self.A = np.dot(E, self.A)
-                    self.ops.append(E)
-
-        # reverse the order of operations
-        self.ops = self.ops[::-1]
+                    self.M = np.dot(E, self.M)
 
     def solve(self):
         # perform forward and backward sub
         self.forward_sub()
         self.back_sub()
 
-        # solve for x
-        M = multi_dot(self.ops)
-        x = np.dot(M, self.b)
+        x = np.dot(self.M, self.b)
 
-        return [x, self.ops]
+        return [x, self.M]

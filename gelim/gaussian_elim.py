@@ -45,12 +45,7 @@ class GaussElim(object):
       numpy array of shape (N, N).
     """
 
-    def __init__(self, A, b, pivoting=None):
-        self.A = A
-        self.b = b
-        self.M = np.eye(A.shape[0])
-
-        # ensure correct pivoting provided
+    def __init__(self, pivoting=None):
         error_msg = "[!] Invalid pivoting option."
         allowed = [None, 'partial', 'full']
         assert (pivoting in allowed), error_msg
@@ -204,3 +199,10 @@ class GaussElim(object):
         x = np.dot(self.M, self.b)
 
         return [x, self.M]
+
+    def __call__(self, A, b):
+        self.A = A
+        self.b = b
+        self.M = np.eye(A.shape[0])
+
+        return self.solve()

@@ -16,8 +16,8 @@ class GaussianElimTest(unittest.TestCase):
 
         expected = np.linalg.solve(A, b)
 
-        gelim = GaussElim()
-        actual = gelim(A, b)[0]
+        gelim = GaussElim(A, b)
+        actual = gelim.solve()[0]
 
         self.assertTrue(np.allclose(expected, actual))
 
@@ -27,8 +27,8 @@ class GaussianElimTest(unittest.TestCase):
 
         expected = np.linalg.solve(A, b)
 
-        gelim = GaussElim(pivoting='partial')
-        actual = gelim(A, b)[0]
+        gelim = GaussElim(A, b, pivoting='partial')
+        actual = gelim.solve()[0]
 
         self.assertTrue(np.allclose(expected, actual))
 
@@ -38,8 +38,8 @@ class GaussianElimTest(unittest.TestCase):
 
         expected = np.linalg.solve(A, b)
 
-        gelim = GaussElim(pivoting='full')
-        actual = gelim(A, b)[0]
+        gelim = GaussElim(A, b, pivoting='full')
+        actual = gelim.solve()[0]
 
         self.assertTrue(np.allclose(expected, actual))
 

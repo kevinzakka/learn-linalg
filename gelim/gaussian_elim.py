@@ -45,7 +45,11 @@ class GaussElim(object):
       numpy array of shape (N, N).
     """
 
-    def __init__(self, pivoting=None):
+    def __init__(self, A, b, pivoting=None):
+        self.A = A
+        self.b = b
+        self.M = np.eye(A.shape[0])
+
         error_msg = "[!] Invalid pivoting option."
         allowed = [None, 'partial', 'full']
         assert (pivoting in allowed), error_msg
@@ -55,7 +59,6 @@ class GaussElim(object):
         num_rows, num_cols = self.A.shape
 
         for i in range(num_rows):
-
             # precheck to see if work is done for this iter
             done = True
             if self.A[i, i] == 1:
@@ -176,7 +179,6 @@ class GaussElim(object):
         num_rows, num_cols = self.A.shape
 
         for i in range(num_rows-1, 0, -1):
-
             # eliminate all elements in column above
             for k in range(i-1, -1, -1):
                 # if element is 0, then done
@@ -199,10 +201,3 @@ class GaussElim(object):
         x = np.dot(self.M, self.b)
 
         return [x, self.M]
-
-    def __call__(self, A, b):
-        self.A = A
-        self.b = b
-        self.M = np.eye(A.shape[0])
-
-        return self.solve()

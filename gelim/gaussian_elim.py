@@ -28,8 +28,8 @@ class GaussElim(object):
     ----
     - A: a numpy array of shape (N, N).
     - b: a numpy array of shape (N,).
-    - pivoting: (string) the pivoting strategy used.
-        - None: picks the left-most nonzero entry.
+    - pivoting: (string) the pivoting strategy used. If None, performs
+      a naive strategy that picks the left-most nonzero entry.
         - 'partial': looks through the current column and permutes
           rows of the matrix so that the largest absolute value
           appears on the diagonal.
@@ -49,8 +49,13 @@ class GaussElim(object):
     def __init__(self, A, b, pivoting=None):
         self.A = A
         self.b = b
-        self.pivoting = pivoting
         self.ops = []
+
+        # ensure correct pivoting provided
+        error_msg = "[!] Invalid pivoting option."
+        allowed = [None, 'partial', 'full']
+        assert (pivoting in allowed), error_msg
+        self.pivoting = pivoting
 
     def forward_sub(self):
         num_rows, num_cols = self.A.shape
@@ -79,11 +84,43 @@ class GaussElim(object):
             else:
                 # strategy for remaining rows
                 self.pivot = None
-                # look through columns of row to find first nonzero element
-                for j in range(1, num_cols):
-                    if self.A[i, j] != 0:
-                        self.pivot = self.A[i, j]
-                        break
+
+                if self.pivoting is None:
+                    # look through columns of row to find first nonzero element
+                    for j in range(1, num_cols):
+                        if self.A[i, j] != 0:
+                            self.pivot = self.A[i, j]
+                            break
+
+                elif self.pivoting == 'partial':
+                    # as before, look through column for first nonzero element
+                    for j in range(1, num_cols):
+                        if self.A[i, j] != 0:
+                            pivot_val = np.abs(self.A[i, j])
+                            pivot_row = i
+                            pivot_col = j
+                            break
+
+                    # last row does not need partial pivoting
+                    if i != num_rows - 1:
+
+                        # look underneath and find bigger pivot if it exists
+                        for k in range(i+1, num_rows):
+                            if np.abs(self.A[k, pivot_col]) > pivot_val:
+                                pivot_val = np.abs(self.A[k, pivot_col])
+                                pivot_row = k
+
+                        # switch current row with row containing max
+                        if pivot_row != i:
+                            P = permute(num_rows, [(i, pivot_row)])
+                            self.A = np.dot(P, self.A)
+                            self.ops.append(P)
+
+                    self.pivot = self.A[i, pivot_col]
+
+                # full pivoting
+                else:
+                    pass
 
             # scale the row containing pivot to make 1
             scale_factor = 1. / self.pivot
@@ -125,15 +162,16 @@ class GaussElim(object):
                     self.A = np.dot(E, self.A)
                     self.ops.append(E)
 
+        # reverse the order of operations
+        self.ops = self.ops[::-1]
+
     def solve(self):
-        # perform forward and backward
+        # perform forward and backward sub
         self.forward_sub()
         self.back_sub()
 
-        self.ops = self.ops[::-1]
+        # solve for x
         M = multi_dot(self.ops)
-
-        # solve x
         x = np.dot(M, self.b)
 
         return [x, self.ops]

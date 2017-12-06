@@ -1,32 +1,27 @@
 import numpy as np
 
-from row_ops import permute, scale, eliminate
+from gelim.row_ops import permute, scale, eliminate
 
 
-class GaussElim(object):
+class LU(object):
     """
-    Apply Gaussian Elimination to solve a system of linear
-    equations of the form Ax = b.
 
-    Concretely, GaussElim proceeds in 2 steps:
+    Performs the LU decomposition of a matrix A. This is useful
+    for solving linear systems of equations where there are multiple
+    right-hand side vectors b.
 
-    - forward subsitution: for each row in the matrix A, if the
-      row does not consist of zeros, pick the  left-most non-zero
-      entry as the pivot. If the row is full of zeros, swap it with
-      any non-zero lower row. Apply a scaling operation to so that
-      the pivot is equal to 1, then use this row to eliminate all
-      other values underneath the same column. Finally, move the
-      pivot to the next row and repeat a similar series of operations
-      until the matrix A is an upper-tiangular matrix.
+    LU decomposition decouples the factorization phase from the actual
+    solving phase such that the factorization can be reused to efficiently
+    solve for each b.
 
-    - back substitution: proceed in the reverse order of rows and
-      eliminate backwards such that the end result is the indentity
-      matrix.
+    Concretely, LU decomposition consists in the forward substitution phase
+    of Gaussian Elimination with an added step of recording an extra value
+    in the places where the zeros are produced. The matrix A is edited in place
+    such that the end result is L and U both being stored in the matrix A.
 
     Args
     ----
     - A: a numpy array of shape (N, N).
-    - b: a numpy array of shape (N,).
     - pivoting: (string) the pivoting strategy used. If None, performs
       a naive strategy that picks the left-most nonzero entry.
         - 'partial': looks through the current column and permutes
@@ -38,24 +33,23 @@ class GaussElim(object):
 
     Returns
     -------
-    - x: a numpy array of shape (N,)
-    - M: the inverse of the matrix A which corresponds to the dot
-      product of all the elementary row operations applied during
-      the forward and back substitution in reverse order. It is a
-      numpy array of shape (N, N).
+    - L: a lower triangular matrix of shape (N, N).
+    - U: an upper triangular matrix of shape (N, N).
     """
 
-    def __init__(self, A, b, pivoting=None, record=False):
+    def __init__(self, A, pivoting=None):
         self.A = A
-        self.b = b
-        self.M = np.eye(A.shape[0])
 
         error_msg = "[!] Invalid pivoting option."
         allowed = [None, 'partial', 'full']
         assert (pivoting in allowed), error_msg
         self.pivoting = pivoting
 
-    def forward_sub(self):
+        self.L = np.eye(A.shape[0])
+        self.U = np.zeros(A.shape)
+
+    def decompose(self):
+
         num_rows, num_cols = self.A.shape
 
         for i in range(num_rows):
@@ -174,30 +168,19 @@ class GaussElim(object):
                         E = eliminate(num_rows, i, scale_factor, k)
                         self.A = np.dot(E, self.A)
                         self.M = np.dot(E, self.M)
+                        # store scaling factor in-place
+                        self.A[k, i] = - scale_factor
 
-    def back_sub(self):
-        num_rows, num_cols = self.A.shape
+        # extract U
+        for i in range(num_rows):
+            for j in range(i, num_cols):
+                self.U = self.A[i, j]
 
-        for i in range(num_rows-1, 0, -1):
-            # eliminate all elements in column above
-            for k in range(i-1, -1, -1):
-                # if element is 0, then done
-                if self.A[k, i] == 0:
-                    continue
-                # else eliminiate the current row
-                else:
-                    # compute scaling factor
-                    scale_factor = - (self.A[k, i])
-                    # scale row i by this factor and add it to row k
-                    E = eliminate(num_rows, i, scale_factor, k)
-                    self.A = np.dot(E, self.A)
-                    self.M = np.dot(E, self.M)
+        # extract L
+        for i in range(1, num_rows):
+            for j in range(i):
+                self.L = self.A[i, j]
 
-    def solve(self):
-        # perform forward and backward sub
-        self.forward_sub()
-        self.back_sub()
-
-        x = np.dot(self.M, self.b)
-
-        return [x, self.M]
+    def __call__(self):
+        self.decompose()
+        return self.L, self.U

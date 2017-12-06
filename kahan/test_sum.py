@@ -39,5 +39,6 @@ class KahanSumTest(unittest.TestCase):
         actual = kahan_sum(x, axis=1, keepdims=True)
         self.assertTrue(np.allclose(expected, actual))
 
+
 if __name__ == '__main__':
     unittest.main()

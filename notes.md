@@ -1,3 +1,5 @@
+## Gaussian Elimination
+
 Ax = b
 
 - A of shape (M, N)
@@ -55,6 +57,8 @@ Ax = b
 - for each pivot, we have forward and backward so O(n^2)
 - since n pivots, we have O(n^3)
 
+### Pivoting Strategies
+
 - choosing the pivot is important since dividing by it can lead to instability
     - ideally, we want a big pivot to lead to large numbers
     - if pivot is very small, this can blow up once we scale by the inverse of the pivot
@@ -65,3 +69,30 @@ Ax = b
           that diagonal has largest possible values. (way more expensive)
 
 For columns instead of rows, postmultiply A by the permutation matrix `np.dot(A, P)`.
+
+## LU Decomposition
+
+In many engineering applications, when you solve Ax=b, the matrix A remains unchanged, while the right hand side vector b keeps changing (a typical example is when one is solving partial differential equations).
+
+The key idea behind solving using the LU factorization is to decouple the factorization phase (usually computationally expensive) from the actual solving phase. The factorization phase only needs the matrix A, while the actual solving phase makes use of the factored form of A and the right hand side to solve the linear system. Hence, once we have the factorization, we can make use of the factored form of A to solve for different right hand sides at a relatively moderate computational cost.
+
+Given $A = LU$, we have $LUx = b$ and define $y = Ux$. To solve this system, we use a (now familiar) 2-step solution:
+
+- Solve the lower triangular system $Ly = b$ for y using forward substitution.
+- Solve the upper triangular system $Ux = y$ for x using back substituion.
+
+This can easily be parallelized for multiple right-hand side b's. We perform the factorization A = LU once, then
+
+- Solve $LY = B$ by parallel forward substitutions.
+- Solve $UX = Y$ by parallel back substitutions. 
+
+The cost of factorizing the matrix A into $LU$ is $O(n^3)$. Once you have this factorization, the cost of solving i.e. the cost of solving $LUx=b$ is just $O(n^2)$, since the cost of solving a triangular system scales as $O(n^2)$.
+
+Hence, if you have `r` right hand side vectors $[b_1, b_2, ..., b_r]$, once you have the $LU$ factorization of the matrix A, the total cost to solve is $O(n^3 + rn^2)$ instead of $O(rn^3)$.
+
+This begs the question, how do we perform the factorization step?
+
+### Factorization
+
+
+

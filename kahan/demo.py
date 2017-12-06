@@ -8,8 +8,6 @@ def main():
     # create pathological input
     x = np.random.uniform(0, 1, int(1e8))
 
-
-
     naive_sum = 0.
     for i in range(len(x)):
         naive_sum += x[i]

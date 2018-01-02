@@ -5,10 +5,9 @@ from gelim.row_ops import permute, scale, eliminate
 
 class LU(object):
     """
-
     Performs the LU decomposition of a matrix A. This is useful
-    for solving linear systems of equations where there are multiple
-    right-hand side vectors b.
+    for solving linear systems of equations with multiple right
+    hand side vectors b.
 
     LU decomposition decouples the factorization phase from the actual
     solving phase such that the factorization can be reused to efficiently
@@ -16,8 +15,9 @@ class LU(object):
 
     Concretely, LU decomposition consists in the forward substitution phase
     of Gaussian Elimination with an added step of recording an extra value
-    in the places where the zeros are produced. The matrix A is edited in place
-    such that the end result is L and U both being stored in the matrix A.
+    in the places where the zeros are produced. The matrix A is edited in 
+    place such that the end result is L and U both being stored in the 
+    matrix A.
 
     Args
     ----
@@ -37,23 +37,18 @@ class LU(object):
     - U: an upper triangular matrix of shape (N, N).
     """
 
-    def __init__(self, A, pivoting=None):
-        self.A = A
-
+    def __init__(self, pivoting=None):
         error_msg = "[!] Invalid pivoting option."
         allowed = [None, 'partial', 'full']
         assert (pivoting in allowed), error_msg
         self.pivoting = pivoting
-
-        self.L = np.eye(A.shape[0])
-        self.U = np.zeros(A.shape)
 
     def decompose(self):
 
         num_rows, num_cols = self.A.shape
 
         for i in range(num_rows):
-            # precheck to see if work is done for this iter
+            # skip iteration if nothing to be done
             done = True
             if self.A[i, i] == 1:
                 for k in range(i+1, num_rows):
@@ -65,16 +60,12 @@ class LU(object):
             if done:
                 continue
 
-            # if left-most element is nonzero choose it
-            if self.A[i, i] != 0:
-                self.pivot = self.A[i, i]
-            # else just switch with any row underneath that has nonzero
-            else:
+            # only if left-most element is zero switch with rows below
+            if self.A[i, i] == 0:
                 # find the index of row to switch with
                 for k in range(i+1, num_rows):
                     if self.A[k, i] != 0:
                         break
-
                 if k == num_rows - 1:
                     raise Exception("Such a system is inconsistent!")
                     return
@@ -82,11 +73,8 @@ class LU(object):
                 # use permutation matrix to switch
                 P = permute(num_rows, [(i, k)])
                 self.A = np.dot(P, self.A)
-                self.M = np.dot(P, self.M)
 
             # now we determine the pivot based on pivoting strategy
-            self.pivot = None
-
             if self.pivoting is None:
                 self.pivot = self.A[i, i]
 
@@ -108,7 +96,6 @@ class LU(object):
                     if pivot_row != i:
                         P = permute(num_rows, [(i, pivot_row)])
                         self.A = np.dot(P, self.A)
-                        self.M = np.dot(P, self.M)
 
                 self.pivot = self.A[i, pivot_col]
 
@@ -140,11 +127,9 @@ class LU(object):
                         if pivot_val_col < pivot_val_row:
                             P = permute(num_rows, [(i, pivot_row)])
                             self.A = np.dot(P, self.A)
-                            self.M = np.dot(P, self.M)
                         else:
                             P = permute(num_rows, [(i, pivot_col)])
                             self.A = np.dot(self.A, P)
-                            self.M = np.dot(self.M, P)
 
                 self.pivot = self.A[i, i]
 
@@ -152,7 +137,6 @@ class LU(object):
             scale_factor = 1. / self.pivot
             S = scale(num_rows, [(i, scale_factor)])
             self.A = np.dot(S, self.A)
-            self.M = np.dot(S, self.M)
 
             if i != num_rows - 1:
                 # eliminate all elements in column underneath pivot
@@ -167,20 +151,17 @@ class LU(object):
                         # scale row i by this factor and add it to row k
                         E = eliminate(num_rows, i, scale_factor, k)
                         self.A = np.dot(E, self.A)
-                        self.M = np.dot(E, self.M)
+                        print(self.A)
                         # store scaling factor in-place
-                        self.A[k, i] = - scale_factor
+                        print("row {}".format(i))
+                        print("\tstoring scaling factor {} at row {}, col {}".format(-scale_factor, k, i))
+                        self.L[k, i] = - scale_factor
 
-        # extract U
-        for i in range(num_rows):
-            for j in range(i, num_cols):
-                self.U = self.A[i, j]
+        self.U = self.A
 
-        # extract L
-        for i in range(1, num_rows):
-            for j in range(i):
-                self.L = self.A[i, j]
-
-    def __call__(self):
+    def __call__(self, A):
+        self.A = A
+        self.L = np.eye(A.shape[0])
+        self.U = np.zeros(A.shape)
         self.decompose()
         return self.L, self.U

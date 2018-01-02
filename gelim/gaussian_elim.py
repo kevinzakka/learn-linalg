@@ -59,7 +59,7 @@ class GaussElim(object):
         num_rows, num_cols = self.A.shape
 
         for i in range(num_rows):
-            # precheck to see if work is done for this iter
+            # skip iteration if nothing to be done
             done = True
             if self.A[i, i] == 1:
                 for k in range(i+1, num_rows):
@@ -71,16 +71,12 @@ class GaussElim(object):
             if done:
                 continue
 
-            # if left-most element is nonzero choose it
-            if self.A[i, i] != 0:
-                self.pivot = self.A[i, i]
-            # else just switch with any row underneath that has nonzero
-            else:
+            # only if left-most element is zero switch with rows below
+            if self.A[i, i] == 0:
                 # find the index of row to switch with
                 for k in range(i+1, num_rows):
                     if self.A[k, i] != 0:
                         break
-
                 if k == num_rows - 1:
                     raise Exception("Such a system is inconsistent!")
                     return
@@ -91,8 +87,6 @@ class GaussElim(object):
                 self.M = np.dot(P, self.M)
 
             # now we determine the pivot based on pivoting strategy
-            self.pivot = None
-
             if self.pivoting is None:
                 self.pivot = self.A[i, i]
 

@@ -114,29 +114,45 @@ def eliminate(N, k, c, l):
     Scales row k of a square matrix A of shape (N, N)
     by c and adds the result to row l.
 
+    When c and l are lists, scales row k of A by c[i]
+    and adds the result to row l[i]. This is useful when
+    you want to eliminate all the rows under a given pivot. 
+
     Args
     ----
     - N: number of rows/columns of square matrix A.
-    - c: a non-zero integer to scale row k by.
+    - c: a non-zero integer to scale row k by. Can also be a list
+      of scalars.
     - k: an intger where A[k] is the row to scale by c.
-    - l: an integer where A[l] += c * A[k]
+    - l: an integer where A[l] += c * A[k]. Can also be a list of
+      integers.
 
     Returns
     -------
     - E: elimination array of size (N, N).
     """
 
-    # ensure scalar is non zero
-    error_msg = "[!] Scalar cannot be 0."
-    assert (c != 0), error_msg
+    ### TODO: argument checking
+    # # ensure scalar is non zero
+    # error_msg = "[!] Scalar cannot be 0."
+    # assert (c != 0), error_msg
 
-    # ensure l and k do not exceed rows of A
-    error_msg = "[!] Indices cannot exceed {}.".format(N)
-    assert ((l and k) < N), error_msg
+    # # ensure l and k do not exceed rows of A
+    # error_msg = "[!] Indices cannot exceed {}.".format(N)
+    # assert ((l and k) < N), error_msg
 
-    # construct elimination matrix
-    row_k = basis_vec(k, N)
-    row_l = basis_vec(l, N)
-    E = np.eye(N) + (c * np.dot(row_l, row_k.T))
+    # check if l or c are lists
+    is_list = isinstance(c, (tuple, list))
+
+    if is_list:
+        E = np.eye(N)
+        # fill in subdiagonal elements
+        for i in range(len(c)):
+            E[l[i], k] = c[i]
+    else:
+        # construct elimination matrix
+        row_k = basis_vec(k, N)
+        row_l = basis_vec(l, N)
+        E = np.eye(N) + (c * np.dot(row_l, row_k.T))
 
     return E

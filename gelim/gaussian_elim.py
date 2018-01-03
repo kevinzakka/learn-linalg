@@ -155,37 +155,21 @@ class GaussElim(object):
             self.M = np.dot(S, self.M)
 
             if i != num_rows - 1:
-                # eliminate all elements in column underneath pivot
-                for k in range(i+1, num_rows):
-                    # if element is 0, then done
-                    if self.A[k, i] == 0:
-                        continue
-                    # else eliminate the current row
-                    else:
-                        # compute scaling factor
-                        scale_factor = - (self.A[k, i])
-                        # scale row i by this factor and add it to row k
-                        E = eliminate(num_rows, i, scale_factor, k)
-                        self.A = np.dot(E, self.A)
-                        self.M = np.dot(E, self.M)
+                l_s = list(np.arange(i+1, num_rows))
+                c_s = [-self.A[k, i] for k in range(i+1, num_rows)]
+                E = eliminate(num_rows, i, c_s, l_s)
+                self.A = np.dot(E, self.A)
+                self.M = np.dot(E, self.M)
 
     def back_sub(self):
         num_rows, num_cols = self.A.shape
 
         for i in range(num_rows-1, 0, -1):
-            # eliminate all elements in column above
-            for k in range(i-1, -1, -1):
-                # if element is 0, then done
-                if self.A[k, i] == 0:
-                    continue
-                # else eliminiate the current row
-                else:
-                    # compute scaling factor
-                    scale_factor = - (self.A[k, i])
-                    # scale row i by this factor and add it to row k
-                    E = eliminate(num_rows, i, scale_factor, k)
-                    self.A = np.dot(E, self.A)
-                    self.M = np.dot(E, self.M)
+            l_s = list(np.arange(i-1, -1, -1))
+            c_s = [-self.A[k, i] for k in range(i-1, -1, -1)]
+            E = eliminate(num_rows, i, c_s, l_s)
+            self.A = np.dot(E, self.A)
+            self.M = np.dot(E, self.M)
 
     def solve(self):
         # perform forward and backward sub

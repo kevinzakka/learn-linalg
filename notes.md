@@ -94,5 +94,36 @@ This begs the question, how do we perform the factorization step?
 
 ### Factorization
 
+### More into GE
+
+Gaussian elimination transforms a full linear system into an upper-triangular one by applying simple linear transformations on the left. We confine oursevles to square matrices since the algorithm is rarely applied to rectangular matrices in practice.
+
+The idea of GE is to transform the matrix A into an mxm upper-triangular matrix U by introducing zeros below the diagonal, first in column 1, then in column 2, and so on. This is done by subtracting multiples of each row from subsequent rows. This elimination process is equivalent to multiplying A by a sequence of lower-triangular matrices L_k on the left.
+
+Ignoring the permutation operation we learned earlier, recall that if we want to add c times the row k to row l, then this consists in multiplying A on the left by L_k where
+
+L_k = I + cxe_lxe_k.T
+
+Note that since l > k, L_k is always a unit lower-triangular matrix. For example, given a 3x3 matrix A, and say we want to eliminate rows 2 and 3, then our matrix L1 would look like this
+
+[1,  0,  0]
+[x,  1,  0]
+[x,  0,  1]
+
+and then we want to eliminate row 2 from row 3 then L2 would look like this
+
+[1,  0,  0]
+[0,  1,  0]
+[0,  x,  1]
+
+By unit, we mean that the elements on the diagonal of L_k are equal to 1. I'll be foregoing the proof here, but we can show that the inverse of L_k is just L_k with the subdiagonal elements negated and finally that L, the product of all L_k's is itself a unit lower-triangular matrix with the subdiagonal entries collected in the appropriate places.
+
+- show that L_k is unit lower-triangular
+- show that the inverse of L_k is L_k with the subdiagonal entries negated
+- show that the product of unit lower-triangular is unit lower-triangular
+- thus L which is the product of all these L_k's is a unit lower-triangular matrix 
+  with the subdiagonal entries of all the seperate L_k's in the correct position.
+
+
 
 

@@ -47,7 +47,7 @@ class LU(object):
 
         num_rows, num_cols = self.A.shape
 
-        for i in range(num_rows):
+        for i in range(num_rows-1):
             # skip iteration if nothing to be done
             done = True
             if self.A[i, i] == 1:
@@ -151,17 +151,20 @@ class LU(object):
                         # scale row i by this factor and add it to row k
                         E = eliminate(num_rows, i, scale_factor, k)
                         self.A = np.dot(E, self.A)
-                        print(self.A)
                         # store scaling factor in-place
-                        print("row {}".format(i))
-                        print("\tstoring scaling factor {} at row {}, col {}".format(-scale_factor, k, i))
                         self.L[k, i] = - scale_factor
+                        print("L")
+                        print(self.L)
+                        print("A")
+                        print(self.A)
+                        print("\n")
+                        print("\n")
 
         self.U = self.A
 
     def __call__(self, A):
         self.A = A
         self.L = np.eye(A.shape[0])
-        self.U = np.zeros(A.shape)
+        self.U = None
         self.decompose()
         return self.L, self.U

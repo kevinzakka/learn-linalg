@@ -1,7 +1,7 @@
 import numpy as np
 
 from utils import unit_diag, lower_diag, upper_diag
-from linalg.gelim.row_ops import permute
+from row_ops import permute
 
 
 class LU(object):
@@ -149,16 +149,16 @@ class LU(object):
                     self.A[j, k] -= scale_factor*self.A[i, k]
 
     def __call__(self, A):
-        self.A = A
+        self.A = np.array(A)
         self.P = np.eye(len(A))
         self.Q = np.eye(len(A))
 
         self.decompose()
 
-        P = self.P
+        P = self.P.T
         L = unit_diag(lower_diag(self.A))
         U = upper_diag(self.A, diag=True)
-        Q = self.Q
+        Q = self.Q.T
 
         if self.pivoting is None:
             return (L, U)

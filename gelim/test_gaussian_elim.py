@@ -11,10 +11,8 @@ class GaussianElimTest(unittest.TestCase):
     """
 
     def test_no_pivoting(self):
-        # A = np.array([[3, 1], [1, 2]])
-        A = np.array([[2, 1, 1, 0], [4, 3, 3, 1], [8, 7, 9, 5], [6, 7, 9, 8]])
-        # b = np.array([9, 8])
-        b = np.array([9, 8, 1, 2])
+        A = np.array([[3, 1], [1, 2]])
+        b = np.array([9, 8])
 
         expected = np.linalg.solve(A, b)
         actual = GaussElim(A, b).solve()[0]

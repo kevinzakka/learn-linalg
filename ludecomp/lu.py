@@ -133,38 +133,16 @@ class LU(object):
 
                 self.pivot = self.A[i, i]
 
-            # scale the row containing pivot to make 1
-            scale_factor = 1. / self.pivot
-            S = scale(num_rows, [(i, scale_factor)])
-            self.A = np.dot(S, self.A)
-
-            if i != num_rows - 1:
-                # eliminate all elements in column underneath pivot
-                for k in range(i+1, num_rows):
-                    # if element is 0, then done
-                    if self.A[k, i] == 0:
-                        continue
-                    # else eliminate the current row
-                    else:
-                        # compute scaling factor
-                        scale_factor = - (self.A[k, i])
-                        # scale row i by this factor and add it to row k
-                        E = eliminate(num_rows, i, scale_factor, k)
-                        self.A = np.dot(E, self.A)
-                        # store scaling factor in-place
-                        self.L[k, i] = - scale_factor
-                        print("L")
-                        print(self.L)
-                        print("A")
-                        print(self.A)
-                        print("\n")
-                        print("\n")
+            for k in range(i+1, num_rows):
+                scale_factor = -(self.A[k, i]/self.pivot)
+                self.L[k, i] = - scale_factor
+                E = eliminate(num_rows, i, scale_factor, k)
+                self.A = np.dot(E, self.A)
 
         self.U = self.A
 
     def __call__(self, A):
         self.A = A
         self.L = np.eye(A.shape[0])
-        self.U = None
         self.decompose()
         return self.L, self.U

@@ -154,12 +154,11 @@ class GaussElim(object):
             self.A = np.dot(S, self.A)
             self.M = np.dot(S, self.M)
 
-            if i != num_rows - 1:
-                l_s = list(np.arange(i+1, num_rows))
-                c_s = [-self.A[k, i] for k in range(i+1, num_rows)]
-                E = eliminate(num_rows, i, c_s, l_s)
-                self.A = np.dot(E, self.A)
-                self.M = np.dot(E, self.M)
+            l_s = list(np.arange(i+1, num_rows))
+            c_s = [-self.A[k, i] for k in range(i+1, num_rows)]
+            E = eliminate(num_rows, i, c_s, l_s)
+            self.A = np.dot(E, self.A)
+            self.M = np.dot(E, self.M)
 
     def back_sub(self):
         num_rows, num_cols = self.A.shape

@@ -132,15 +132,6 @@ def eliminate(N, k, c, l):
     - E: elimination array of size (N, N).
     """
 
-    ### TODO: argument checking
-    # # ensure scalar is non zero
-    # error_msg = "[!] Scalar cannot be 0."
-    # assert (c != 0), error_msg
-
-    # # ensure l and k do not exceed rows of A
-    # error_msg = "[!] Indices cannot exceed {}.".format(N)
-    # assert ((l and k) < N), error_msg
-
     # check if l or c are lists
     is_list = isinstance(c, (tuple, list))
 

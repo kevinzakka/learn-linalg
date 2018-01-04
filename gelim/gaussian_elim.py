@@ -55,7 +55,7 @@ class GaussElim(object):
         assert (pivoting in allowed), error_msg
         self.pivoting = pivoting
 
-    def forward_sub(self):
+    def forward(self):
         num_rows, num_cols = self.A.shape
 
         for i in range(num_rows):
@@ -160,7 +160,7 @@ class GaussElim(object):
             self.A = np.dot(E, self.A)
             self.M = np.dot(E, self.M)
 
-    def back_sub(self):
+    def backward(self):
         num_rows, num_cols = self.A.shape
 
         for i in range(num_rows-1, 0, -1):
@@ -172,8 +172,8 @@ class GaussElim(object):
 
     def solve(self):
         # perform forward and backward sub
-        self.forward_sub()
-        self.back_sub()
+        self.forward()
+        self.backward()
 
         x = np.dot(self.M, self.b)
 

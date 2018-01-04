@@ -1,5 +1,6 @@
 import numpy as np
 
+from utils import unit_diag, lower_diag, upper_diag
 from gelim.row_ops import permute, scale, eliminate
 
 
@@ -133,16 +134,17 @@ class LU(object):
 
                 self.pivot = self.A[i, i]
 
-            for k in range(i+1, num_rows):
-                scale_factor = -(self.A[k, i]/self.pivot)
-                self.L[k, i] = - scale_factor
-                E = eliminate(num_rows, i, scale_factor, k)
-                self.A = np.dot(E, self.A)
-
-        self.U = self.A
+            for j in range(i+1, num_rows):
+                scale_factor = (self.A[j, i] / self.pivot)
+                self.A[j, i] = scale_factor
+                for k in range(i+1, num_rows):
+                    self.A[j, k] -= scale_factor*self.A[i, k]
 
     def __call__(self, A):
         self.A = A
-        self.L = np.eye(A.shape[0])
         self.decompose()
-        return self.L, self.U
+
+        L = unit_diag(lower_diag(self.A))
+        U = upper_diag(self.A, diag=True)
+
+        return L, U

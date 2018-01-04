@@ -21,6 +21,7 @@ class LUDecompositionTest(unittest.TestCase):
 
         L_a, U_a = LU()(T)
         actual = np.dot(L_a, U_a)
+
         self.assertTrue(np.allclose(actual, T))
 
     def test_partial_pivoting(self):
@@ -45,6 +46,7 @@ class LUDecompositionTest(unittest.TestCase):
         ])
 
         actual = list(LU(pivoting='full')(T))
+
         self.assertTrue(np.allclose(multi_dot(actual), T))
 
 

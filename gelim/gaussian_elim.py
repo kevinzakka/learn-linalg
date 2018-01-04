@@ -71,23 +71,23 @@ class GaussElim(object):
             if done:
                 continue
 
-            # only if left-most element is zero switch with rows below
-            if self.A[i, i] == 0:
-                # find the index of row to switch with
-                for k in range(i+1, num_rows):
-                    if self.A[k, i] != 0:
-                        break
-                if k == num_rows - 1:
-                    raise Exception("Such a system is inconsistent!")
-                    return
-
-                # use permutation matrix to switch
-                P = permute(num_rows, [(i, k)])
-                self.A = np.dot(P, self.A)
-                self.M = np.dot(P, self.M)
-
-            # now we determine the pivot based on pivoting strategy
+            # determine the pivot based on pivoting strategy
             if self.pivoting is None:
+                # switch with any below row if zero
+                if self.A[i, i] == 0:
+                    # find the index of row to switch with
+                    for k in range(i+1, num_rows):
+                        if self.A[k, i] != 0:
+                            break
+                    if k == num_rows - 1:
+                        raise Exception("Such a system is inconsistent!")
+                        return
+
+                    # use permutation matrix to switch
+                    P = permute(num_rows, [(i, k)])
+                    self.A = np.dot(P, self.A)
+                    self.M = np.dot(P, self.M)
+
                 self.pivot = self.A[i, i]
 
             elif self.pivoting == 'partial':

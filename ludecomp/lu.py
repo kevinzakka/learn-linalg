@@ -1,7 +1,7 @@
 import numpy as np
 
 from utils import unit_diag, lower_diag, upper_diag
-from gelim.row_ops import permute, scale, eliminate
+from linalg.gelim.row_ops import permute
 
 
 class LU(object):
@@ -16,8 +16,8 @@ class LU(object):
 
     Concretely, LU decomposition consists in the forward substitution phase
     of Gaussian Elimination with an added step of recording an extra value
-    in the places where the zeros are produced. The matrix A is edited in 
-    place such that the end result is L and U both being stored in the 
+    in the places where the zeros are produced. The matrix A is edited in
+    place such that the end result is L and U both being stored in the
     matrix A.
 
     Args
@@ -36,6 +36,10 @@ class LU(object):
     -------
     - L: a lower triangular matrix of shape (N, N).
     - U: an upper triangular matrix of shape (N, N).
+    - P: a permutation matrix of shape (N, N) if
+      partial or full pivoting.
+    - Q: a permutation matrix of shape (N, N) if
+      full pivoting.
     """
 
     def __init__(self, pivoting=None):
@@ -46,13 +50,13 @@ class LU(object):
 
     def decompose(self):
 
-        num_rows, num_cols = self.A.shape
+        m = len(self.A)
 
-        for i in range(num_rows-1):
+        for i in range(m-1):
             # skip iteration if nothing to be done
             done = True
             if self.A[i, i] == 1:
-                for k in range(i+1, num_rows):
+                for k in range(i+1, m):
                     if self.A[k, i] != 0:
                         done = False
             else:
@@ -61,22 +65,23 @@ class LU(object):
             if done:
                 continue
 
-            # only if left-most element is zero switch with rows below
-            if self.A[i, i] == 0:
-                # find the index of row to switch with
-                for k in range(i+1, num_rows):
-                    if self.A[k, i] != 0:
-                        break
-                if k == num_rows - 1:
-                    raise Exception("Such a system is inconsistent!")
-                    return
-
-                # use permutation matrix to switch
-                P = permute(num_rows, [(i, k)])
-                self.A = np.dot(P, self.A)
-
-            # now we determine the pivot based on pivoting strategy
+            # determine the pivot based on pivoting strategy
             if self.pivoting is None:
+                # switch with any below row if zero
+                if self.A[i, i] == 0:
+                    # find the index of row to switch with
+                    for k in range(i+1, m):
+                        if self.A[k, i] != 0:
+                            break
+                    if k == m - 1:
+                        raise Exception("Such a system is inconsistent!")
+                        return
+
+                    # use permutation matrix to switch
+                    P = permute(m, [(i, k)])
+                    self.A = np.dot(P, self.A)
+                    self.P = np.dot(P, self.P)
+
                 self.pivot = self.A[i, i]
 
             elif self.pivoting == 'partial':
@@ -85,18 +90,19 @@ class LU(object):
                 pivot_col = i
 
                 # last row does not need partial pivoting
-                if i != num_rows - 1:
+                if i != m - 1:
 
                     # look underneath and find bigger pivot if it exists
-                    for k in range(i+1, num_rows):
+                    for k in range(i+1, m):
                         if np.abs(self.A[k, pivot_col]) > pivot_val:
                             pivot_val = np.abs(self.A[k, pivot_col])
                             pivot_row = k
 
                     # switch current row with row containing max
                     if pivot_row != i:
-                        P = permute(num_rows, [(i, pivot_row)])
+                        P = permute(m, [(i, pivot_row)])
                         self.A = np.dot(P, self.A)
+                        self.P = np.dot(P, self.P)
 
                 self.pivot = self.A[i, pivot_col]
 
@@ -108,16 +114,16 @@ class LU(object):
                 pivot_col = i
 
                 # last row does not need full pivoting
-                if i != num_rows - 1:
+                if i != m - 1:
 
                     # look through right of row for largest pivot
-                    for j in range(i+1, num_cols):
+                    for j in range(i+1, m):
                         if np.abs(self.A[i, j]) > pivot_val_col:
                             pivot_val_col = np.abs(self.A[i, j])
                             pivot_col = j
 
                     # look through bottom of col for largest pivot
-                    for k in range(i+1, num_rows):
+                    for k in range(i+1, m):
                         if np.abs(self.A[k, i]) > pivot_val_row:
                             pivot_val_row = np.abs(self.A[k, i])
                             pivot_row = k
@@ -126,25 +132,36 @@ class LU(object):
                     if pivot_row != i or pivot_col != i:
                         # choose the largest of both
                         if pivot_val_col < pivot_val_row:
-                            P = permute(num_rows, [(i, pivot_row)])
+                            P = permute(m, [(i, pivot_row)])
                             self.A = np.dot(P, self.A)
+                            self.P = np.dot(P, self.P)
                         else:
-                            P = permute(num_rows, [(i, pivot_col)])
-                            self.A = np.dot(self.A, P)
+                            Q = permute(m, [(i, pivot_col)])
+                            self.A = np.dot(self.A, Q)
+                            self.Q = np.dot(self.Q, Q)
 
                 self.pivot = self.A[i, i]
 
-            for j in range(i+1, num_rows):
+            for j in range(i+1, m):
                 scale_factor = (self.A[j, i] / self.pivot)
                 self.A[j, i] = scale_factor
-                for k in range(i+1, num_rows):
+                for k in range(i+1, m):
                     self.A[j, k] -= scale_factor*self.A[i, k]
 
     def __call__(self, A):
         self.A = A
+        self.P = np.eye(len(A))
+        self.Q = np.eye(len(A))
+
         self.decompose()
 
+        P = self.P
         L = unit_diag(lower_diag(self.A))
         U = upper_diag(self.A, diag=True)
+        Q = self.Q
 
-        return L, U
+        if self.pivoting is None:
+            return (L, U)
+        elif self.pivoting == "partial":
+            return (P, L, U)
+        return (P, L, U, Q)

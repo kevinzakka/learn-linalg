@@ -116,7 +116,7 @@ def eliminate(N, k, c, l):
 
     When c and l are lists, scales row k of A by c[i]
     and adds the result to row l[i]. This is useful when
-    you want to eliminate all the rows under a given pivot. 
+    you want to eliminate all the rows under a given pivot.
 
     Args
     ----

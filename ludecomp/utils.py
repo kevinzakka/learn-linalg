@@ -6,7 +6,7 @@ from functools import reduce
 def upper_diag(A, diag=False):
     """
     Grabs the super-diagonal elements of a
-    square matrix A including the diagonal.
+    square matrix A.
     """
     m = len(A)
     U = np.zeros_like(A)
@@ -24,7 +24,7 @@ def upper_diag(A, diag=False):
 def lower_diag(A, diag=False):
     """
     Grabs the sub-diagonal elements of a
-    square matrix A including the diagonal.
+    square matrix A.
     """
     m = len(A)
     L = np.zeros_like(A)

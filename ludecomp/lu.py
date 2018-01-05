@@ -14,12 +14,6 @@ class LU(object):
     solving phase such that the factorization can be reused to efficiently
     solve for each b.
 
-    Concretely, LU decomposition consists in the forward substitution phase
-    of Gaussian Elimination with an added step of recording an extra value
-    in the places where the zeros are produced. The matrix A is edited in
-    place such that the end result is L and U both being stored in the
-    matrix A.
-
     Args
     ----
     - A: a numpy array of shape (N, N).
@@ -41,9 +35,9 @@ class LU(object):
     - L: a lower triangular matrix of shape (N, N).
     - U: an upper triangular matrix of shape (N, N).
     - P: a permutation matrix of shape (N, N) if
-      partial or full pivoting.
+      partial or full pivoting is used.
     - Q: a permutation matrix of shape (N, N) if
-      full pivoting.
+      full pivoting is used.
     """
 
     def __init__(self, A, pivoting=None):
@@ -172,8 +166,6 @@ class LU(object):
         Perform the LU factorization on the matrix A
         and then solve the linear system Ax = b using
         forward and backward substitution.
-
-        - b can
         """
         self.b = b
 

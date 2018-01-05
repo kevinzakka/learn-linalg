@@ -1,7 +1,7 @@
 import numpy as np
 
-from utils import unit_diag, lower_diag, upper_diag
 from row_ops import permute
+from utils import unit_diag, lower_diag, upper_diag
 
 
 class LU(object):
@@ -31,6 +31,10 @@ class LU(object):
         - 'full': iterates over the entire matrix and permutes both
           rows and columns to get the largest possible value on the
           diagonal.
+    - b: a column vector of shape (N,). Can also be multiple column
+      vectors in the case where one wishes to solve many right-hand
+      sides associated with the same A. In that case, b is of shape
+      (N, K).
 
     Returns
     -------
@@ -42,7 +46,8 @@ class LU(object):
       full pivoting.
     """
 
-    def __init__(self, pivoting=None):
+    def __init__(self, A, pivoting=None):
+        self.backup = np.array(A)
         error_msg = "[!] Invalid pivoting option."
         allowed = [None, 'partial', 'full']
         assert (pivoting in allowed), error_msg
@@ -50,13 +55,16 @@ class LU(object):
 
     def decompose(self):
 
-        m = len(self.A)
+        N = len(self.backup)
+        self.A = np.array(self.backup)
+        self.P = np.eye(N)
+        self.Q = np.eye(N)
 
-        for i in range(m-1):
+        for i in range(N-1):
             # skip iteration if nothing to be done
             done = True
             if self.A[i, i] == 1:
-                for k in range(i+1, m):
+                for k in range(i+1, N):
                     if self.A[k, i] != 0:
                         done = False
             else:
@@ -70,15 +78,15 @@ class LU(object):
                 # switch with any below row if zero
                 if self.A[i, i] == 0:
                     # find the index of row to switch with
-                    for k in range(i+1, m):
+                    for k in range(i+1, N):
                         if self.A[k, i] != 0:
                             break
-                    if k == m - 1:
+                    if k == N - 1:
                         raise Exception("Such a system is inconsistent!")
                         return
 
                     # use permutation matrix to switch
-                    P = permute(m, [(i, k)])
+                    P = permute(N, [(i, k)])
                     self.A = np.dot(P, self.A)
                     self.P = np.dot(P, self.P)
 
@@ -90,17 +98,17 @@ class LU(object):
                 pivot_col = i
 
                 # last row does not need partial pivoting
-                if i != m - 1:
+                if i != N - 1:
 
                     # look underneath and find bigger pivot if it exists
-                    for k in range(i+1, m):
+                    for k in range(i+1, N):
                         if np.abs(self.A[k, pivot_col]) > pivot_val:
                             pivot_val = np.abs(self.A[k, pivot_col])
                             pivot_row = k
 
                     # switch current row with row containing max
                     if pivot_row != i:
-                        P = permute(m, [(i, pivot_row)])
+                        P = permute(N, [(i, pivot_row)])
                         self.A = np.dot(P, self.A)
                         self.P = np.dot(P, self.P)
 
@@ -114,16 +122,16 @@ class LU(object):
                 pivot_col = i
 
                 # last row does not need full pivoting
-                if i != m - 1:
+                if i != N - 1:
 
                     # look through right of row for largest pivot
-                    for j in range(i+1, m):
+                    for j in range(i+1, N):
                         if np.abs(self.A[i, j]) > pivot_val_col:
                             pivot_val_col = np.abs(self.A[i, j])
                             pivot_col = j
 
                     # look through bottom of col for largest pivot
-                    for k in range(i+1, m):
+                    for k in range(i+1, N):
                         if np.abs(self.A[k, i]) > pivot_val_row:
                             pivot_val_row = np.abs(self.A[k, i])
                             pivot_row = k
@@ -132,36 +140,108 @@ class LU(object):
                     if pivot_row != i or pivot_col != i:
                         # choose the largest of both
                         if pivot_val_col < pivot_val_row:
-                            P = permute(m, [(i, pivot_row)])
+                            P = permute(N, [(i, pivot_row)])
                             self.A = np.dot(P, self.A)
                             self.P = np.dot(P, self.P)
                         else:
-                            Q = permute(m, [(i, pivot_col)])
+                            Q = permute(N, [(i, pivot_col)])
                             self.A = np.dot(self.A, Q)
                             self.Q = np.dot(self.Q, Q)
 
                 self.pivot = self.A[i, i]
 
-            for j in range(i+1, m):
+            for j in range(i+1, N):
                 scale_factor = (self.A[j, i] / self.pivot)
                 self.A[j, i] = scale_factor
-                for k in range(i+1, m):
+                for k in range(i+1, N):
                     self.A[j, k] -= scale_factor*self.A[i, k]
 
-    def __call__(self, A):
-        self.A = np.array(A)
-        self.P = np.eye(len(A))
-        self.Q = np.eye(len(A))
-
-        self.decompose()
-
-        P = self.P.T
-        L = unit_diag(lower_diag(self.A))
-        U = upper_diag(self.A, diag=True)
-        Q = self.Q.T
+        self.P = self.P.T
+        self.L = unit_diag(lower_diag(self.A))
+        self.U = upper_diag(self.A, diag=True)
+        self.Q = self.Q.T
 
         if self.pivoting is None:
-            return (L, U)
+            return (self.L, self.U)
         elif self.pivoting == "partial":
-            return (P, L, U)
-        return (P, L, U, Q)
+            return (self.P, self.L, self.U)
+        return (self.P, self.L, self.U, self.Q)
+
+    def solve(self, b):
+        """
+        Perform the LU factorization on the matrix A
+        and then solve the linear system Ax = b using
+        forward and backward substitution.
+
+        - b can
+        """
+        self.b = b
+
+        _ = self.decompose()
+        self._forward()
+        self._backward()
+
+        return self.x
+
+    def _forward(self):
+        """
+        Solves the lower triangular system Ly = b
+        for y by forward substitution.
+
+        If partial pivoting is used, solves the system
+        Ly = Pb and if full pivoting is used, solves
+        the system Ly = PbQ.
+        """
+
+        if self.b.ndim > 1:
+            num_iters = self.b.shape[1]
+            N = self.b.shape[0]
+        else:
+            num_iters = 1
+            N = self.b.shape[0]
+
+        self.y = np.zeros([N, num_iters])
+
+        if self.pivoting is None:
+            right_hand = self.b
+        elif self.pivoting == "partial":
+            right_hand = np.dot(self.P.T, self.b)
+        else:
+            right_hand = np.dot(self.P.T, self.b)
+            right_hand = np.dot(right_hand[:, np.newaxis].T, self.Q.T)
+            right_hand = right_hand.squeeze().T
+
+        for k in range(num_iters):
+            for i in range(N):
+                acc = 0.
+                for j in range(i):
+                    acc += (self.L[i, j]*self.y[j, k])
+                if self.b.ndim > 1:
+                    self.y[i, k] = right_hand[i, k] - acc
+                else:
+                    self.y[i, k] = right_hand[i] - acc
+
+    def _backward(self):
+        """
+        Solve the upper triangular system Ux = y
+        for x by back substitution.
+        """
+
+        if self.b.ndim > 1:
+            num_iters = self.b.shape[1]
+            N = self.b.shape[0]
+        else:
+            num_iters = 1
+            N = self.b.shape[0]
+
+        self.x = np.zeros([N, num_iters])
+
+        for k in range(num_iters):
+            for i in range(N-1, -1, -1):
+                acc = 0.
+                for j in range(N-1, i, -1):
+                    acc += (self.U[i, j]*self.x[j, k])
+                self.x[i, k] = (self.y[i, k] - acc) / (self.U[i, i])
+
+        if self.b.ndim == 1:
+            self.x = self.x.squeeze()

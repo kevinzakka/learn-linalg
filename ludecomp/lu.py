@@ -156,16 +156,16 @@ class LU(object):
                 for k in range(i+1, N):
                     self.A[j, k] -= scale_factor*self.A[i, k]
 
-        self.P = self.P.T
+        self.P = self.P
         self.L = unit_diag(lower_diag(self.A))
         self.U = upper_diag(self.A, diag=True)
-        self.Q = self.Q.T
+        self.Q = self.Q
 
         if self.pivoting is None:
             return (self.L, self.U)
         elif self.pivoting == "partial":
-            return (self.P, self.L, self.U)
-        return (self.P, self.L, self.U, self.Q)
+            return (self.P.T, self.L, self.U)
+        return (self.P, self.L, self.U, self.Q.T)
 
     def solve(self, b):
         """
@@ -205,10 +205,10 @@ class LU(object):
         if self.pivoting is None:
             right_hand = self.b
         elif self.pivoting == "partial":
-            right_hand = np.dot(self.P.T, self.b)
+            right_hand = np.dot(self.P, self.b)
         else:
-            right_hand = np.dot(self.P.T, self.b)
-            right_hand = np.dot(right_hand[:, np.newaxis].T, self.Q.T)
+            right_hand = np.dot(self.P, self.b)
+            right_hand = np.dot(right_hand[:, np.newaxis].T, self.Q)
             right_hand = right_hand.squeeze().T
 
         for k in range(num_iters):

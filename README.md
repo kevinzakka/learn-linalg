@@ -1,6 +1,6 @@
 ## linalg
 
-Currently reinforcing my linear algebra and numerial analysis by reimplementing the fundamentals.
+Currently reinforcing my linear algebra and numerial analysis by reimplementing basic, fundamental algorithms in Python. Inspired by Alex Nichol's Go [implementation](https://github.com/unixpickle/num-analysis).
 
 ## Contents
 

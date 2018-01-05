@@ -1,5 +1,6 @@
 import numpy as np
 
+from sum import KahanSum
 from row_ops import permute
 from utils import unit_diag, lower_diag, upper_diag
 
@@ -47,7 +48,7 @@ class LU(object):
         assert (pivoting in allowed), error_msg
         self.pivoting = pivoting
 
-    def decompose(self):
+    def decompose(self, ret=True):
 
         N = len(self.backup)
         self.A = np.array(self.backup)
@@ -155,11 +156,12 @@ class LU(object):
         self.U = upper_diag(self.A, diag=True)
         self.Q = self.Q
 
-        if self.pivoting is None:
-            return (self.L, self.U)
-        elif self.pivoting == "partial":
-            return (self.P.T, self.L, self.U)
-        return (self.P, self.L, self.U, self.Q.T)
+        if ret:
+            if self.pivoting is None:
+                return (self.L, self.U)
+            elif self.pivoting == "partial":
+                return (self.P.T, self.L, self.U)
+            return (self.P, self.L, self.U, self.Q.T)
 
     def solve(self, b):
         """
@@ -169,7 +171,7 @@ class LU(object):
         """
         self.b = b
 
-        _ = self.decompose()
+        self.decompose(ret=False)
         self._forward()
         self._backward()
 
@@ -205,13 +207,13 @@ class LU(object):
 
         for k in range(num_iters):
             for i in range(N):
-                acc = 0.
+                acc = KahanSum()
                 for j in range(i):
-                    acc += (self.L[i, j]*self.y[j, k])
+                    acc.add(self.L[i, j]*self.y[j, k])
                 if self.b.ndim > 1:
-                    self.y[i, k] = right_hand[i, k] - acc
+                    self.y[i, k] = right_hand[i, k] - acc.cur_sum()
                 else:
-                    self.y[i, k] = right_hand[i] - acc
+                    self.y[i, k] = right_hand[i] - acc.cur_sum()
 
     def _backward(self):
         """
@@ -230,10 +232,10 @@ class LU(object):
 
         for k in range(num_iters):
             for i in range(N-1, -1, -1):
-                acc = 0.
+                acc = KahanSum()
                 for j in range(N-1, i, -1):
-                    acc += (self.U[i, j]*self.x[j, k])
-                self.x[i, k] = (self.y[i, k] - acc) / (self.U[i, i])
+                    acc.add(self.U[i, j]*self.x[j, k])
+                self.x[i, k] = (self.y[i, k] - acc.cur_sum()) / (self.U[i, i])
 
         if self.b.ndim == 1:
             self.x = self.x.squeeze()

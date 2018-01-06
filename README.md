@@ -13,3 +13,4 @@ Currently reinforcing my linear algebra and numerical analysis by reimplementing
 
 - [Stanford CS 205A Notes](https://graphics.stanford.edu/courses/cs205a-13-fall/assets/notes/cs205a_notes.pdf)
 - [Numerical Linear Algebra](https://www.amazon.com/Numerical-Linear-Algebra-Lloyd-Trefethen/dp/0898713617)
+- [Numerical Recipes: The Art of Scientific Computing](http://numerical.recipes/)

@@ -161,8 +161,7 @@ The standard algorithm for this, Cholesky factorization, is a variant of Gaussia
 
 ### Why Cholesky Factorization?
 
-While symmetric, positive definite matrices are rather special, they
-occur quite frequently in some applications, so their special factorization, called Cholesky decomposition, is good to know about. When you can use it, Cholesky decomposition is about a factor of two faster than alternative methods for solving linear equations.
+While symmetric, positive definite matrices are rather special, they occur quite frequently in some applications, so their special factorization, called Cholesky decomposition, is good to know about. When you can use it, Cholesky decomposition is about a factor of two faster than alternative methods for solving linear equations.
 
 ### Hermitian Positive Definite Matrices
 
@@ -177,6 +176,10 @@ A hermitian matric A satisfies conj(x).A.y = conj(conj(y).A.x). This means in pa
 ### Symmetric Gaussian Elimination
 
 Instead of seeking arbitrary lower and upper triangular factors L and U, Cholesky decomposition constructs a lower triangular matrix L whose transpose L.T can itself serve as the upper triangular part (remember that the transpose of a lower triangular matrix is upper triangular).
+
+A = LL^T
+
+This factorization is sometimes referred to as "taking the square root" of the matrix A.
 
 
 

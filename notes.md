@@ -1,3 +1,22 @@
+## Matrix-Vector Multiplication
+
+If b = Ax, then b is a linear combination of the columns of A.
+
+Let x be an n-dimensional column vector and A be an mxn matrix. Then the matrix-vector product b = Ax is the m dimensional column vector defined as
+
+$$
+b_i = sum(j=1 to n) a_ij x_j for i = 1 to m.
+$$
+
+Basically, we're mixing the n columns of A (each of dimension m) into a single column vector b of dimension m.
+
+[b] = [a1|a2|...|an][x1  = x1[a1] + x2[a2] + ... + xn[an]
+                     x2
+                     ...
+                     xn]
+
+Usually when writing Ax = b, we think of A as acting on x to produce b. In contrast, we can also think about it as x acting on A to produce b.
+
 ## Gaussian Elimination
 
 Ax = b
@@ -92,7 +111,7 @@ Hence, if you have `r` right hand side vectors $[b_1, b_2, ..., b_r]$, once you 
 
 This begs the question, how do we perform the factorization step?
 
-### Factorization
+TBC
 
 ### More into GE
 
@@ -123,6 +142,50 @@ By unit, we mean that the elements on the diagonal of L_k are equal to 1. I'll b
 - show that the product of unit lower-triangular is unit lower-triangular
 - thus L which is the product of all these L_k's is a unit lower-triangular matrix 
   with the subdiagonal entries of all the seperate L_k's in the correct position.
+
+### Determinant of a Matrix
+
+We can compute the determinant of a matrix efficiently by using the LU factorization. Given the LUP decomposition of a matrix
+
+A = P^-1 L U, and the fact that
+
+- the determinant of a triangular matrix is the product of the diagonals.
+- the diagonal elements of L are all 1, hence we don't need to compute it's determinant.
+- the determinant of P
+
+## Cholesky Factorization
+
+Our discussion of Gaussian Elimination and the LU factorization led to a generic method for solving linear systems of equations. While this strategy always works, sometimes we can gain speed or numerical advantages by examining the particular system we are solving. In particular, we'll see how Hermitian positive definite matrices (and where they arise) can be decomposed into triangular factors twice as quickly as general matrices.
+
+The standard algorithm for this, Cholesky factorization, is a variant of Gaussian elimination that operates on both the left and the right of the matrix at once, preserving and exploiting symmetry.
+
+### Why Cholesky Factorization?
+
+While symmetric, positive definite matrices are rather special, they
+occur quite frequently in some applications, so their special factorization, called Cholesky decomposition, is good to know about. When you can use it, Cholesky decomposition is about a factor of two faster than alternative methods for solving linear equations.
+
+### Hermitian Positive Definite Matrices
+
+A real matrix A is symmetric if it has the same entries below and above the diagonal. In other words, a_ij = a_ji for all i,j (i != j) or A.T = A. Such a matrix satisfies x.T . A . y = y.T . A . x for all vectors x, y.
+
+More generally, when working with complex matrices, the analoguous of symmetric matrix is hermitian. A hermitian matrix has entries above the diagonal that are the complex conjugate of the entries below. This means that it is equal to its conjugate transpose or A = conj(A.T) or A = A.H where H is the conjugate transpose operation.
+
+Since the diagonal elements stay the same when taking the transpose, it follows necessarily that the diagonal elements of a hermitian matrix must be real, i.e. they are equal to their conjugates.
+
+A hermitian matric A satisfies conj(x).A.y = conj(conj(y).A.x). This means in particular that for any complex x, conj(x).A.x is real. If in addition, conj(x).A.x > 0 for all x != 0, then A is said to be hermitian positive definite.
+
+### Symmetric Gaussian Elimination
+
+Instead of seeking arbitrary lower and upper triangular factors L and U, Cholesky decomposition constructs a lower triangular matrix L whose transpose L.T can itself serve as the upper triangular part (remember that the transpose of a lower triangular matrix is upper triangular).
+
+
+
+
+
+
+
+
+
 
 
 

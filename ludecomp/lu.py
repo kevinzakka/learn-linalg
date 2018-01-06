@@ -48,12 +48,13 @@ class LU(object):
         assert (pivoting in allowed), error_msg
         self.pivoting = pivoting
 
-    def decompose(self, ret=True):
+    def decompose(self, ret=True, det=False):
 
         N = len(self.backup)
         self.A = np.array(self.backup)
         self.P = np.eye(N)
         self.Q = np.eye(N)
+        self.num_switches = 0
 
         for i in range(N-1):
             # skip iteration if nothing to be done
@@ -84,6 +85,7 @@ class LU(object):
                     P = permute(N, [(i, k)])
                     self.A = np.dot(P, self.A)
                     self.P = np.dot(P, self.P)
+                    self.num_switches += 1
 
                 self.pivot = self.A[i, i]
 
@@ -106,6 +108,7 @@ class LU(object):
                         P = permute(N, [(i, pivot_row)])
                         self.A = np.dot(P, self.A)
                         self.P = np.dot(P, self.P)
+                        self.num_switches += 1
 
                 self.pivot = self.A[i, pivot_col]
 
@@ -138,10 +141,12 @@ class LU(object):
                             P = permute(N, [(i, pivot_row)])
                             self.A = np.dot(P, self.A)
                             self.P = np.dot(P, self.P)
+                            self.num_switches += 1
                         else:
                             Q = permute(N, [(i, pivot_col)])
                             self.A = np.dot(self.A, Q)
                             self.Q = np.dot(self.Q, Q)
+                            self.num_switches += 1
 
                 self.pivot = self.A[i, i]
 
@@ -157,11 +162,13 @@ class LU(object):
         self.Q = self.Q
 
         if ret:
+            if det:
+                return (self.num_switches, self.U)
             if self.pivoting is None:
                 return (self.L, self.U)
             elif self.pivoting == "partial":
                 return (self.P.T, self.L, self.U)
-            return (self.P, self.L, self.U, self.Q.T)
+            return (self.P.T, self.L, self.U, self.Q.T)
 
     def solve(self, b):
         """

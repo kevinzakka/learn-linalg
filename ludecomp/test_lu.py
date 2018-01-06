@@ -46,7 +46,6 @@ class LUDecompositionTest(unittest.TestCase):
         ])
 
         actual = list(LU(T, pivoting='full').decompose())
-        actual[0] = actual[0].T
 
         self.assertTrue(np.allclose(multi_dot(actual), T))
 

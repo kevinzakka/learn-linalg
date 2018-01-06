@@ -1,39 +1,28 @@
 import numpy as np
 
-from sum import KahanSum
 from functools import reduce
 
 
-def diagonal(A):
+def herm(A):
     """
-    Grabs the diagonal elements of a square
-    matrix A.
+    Returns the conjugate transpose of A.
+    Equivalent to the H operator `A.H`.
     """
-    m = len(A)
-
-    diag = []
-    for i in range(m):
-        diag.append(A[i, i])
-
-    return diag
+    return A.T.conj()
 
 
-def trace(A):
+def is_hermitian(A):
     """
-    Computes the sum of the diagonal elements
-    of a square matrix A.
+    Returns True if A is hermitian.
     """
-    # grab the diagonal elements
-    diag = diagonal(A)
+    return np.allclose(A, A.T.conj())
 
-    # instantiate kahan summer
-    summer = KahanSum()
 
-    # compute sum of list
-    for d in diag:
-        summer.add(d)
-
-    return summer.cur_sum()
+def is_symmetric(A):
+    """
+    Returns True if A is symmetric.
+    """
+    return np.allclose(A, A.T)
 
 
 def upper_diag(A, diag=False):

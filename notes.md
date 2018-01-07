@@ -244,6 +244,12 @@ In progress. I need to apply the Cholesky–Crout variant which contains explici
 - non-linear optimization: update the Cholesky decomposition of an approximation of the Hessian matrix.
 - matrix inversion
 
+### Linear Systems in the Wild
+
+- aligning 2 images
+- unblur using deconvolution
+
+
 
 
 

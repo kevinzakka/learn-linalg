@@ -184,6 +184,80 @@ class LU(object):
 
         return self.x
 
+    def solve_only(self, P, L, U, b):
+        """
+        Assumes you have called `decompose` previously.
+        """
+        self.b = b
+
+        self._forward_d(P, L, U)
+        self._backward_d(P, L, U)
+
+        return self.x
+
+    def _forward_d(self, P, L, U):
+        """
+        Solves the lower triangular system Ly = b
+        for y by forward substitution.
+
+        If partial pivoting is used, solves the system
+        Ly = Pb and if full pivoting is used, solves
+        the system Ly = PbQ.
+        """
+
+        if self.b.ndim > 1:
+            num_iters = self.b.shape[1]
+            N = self.b.shape[0]
+        else:
+            num_iters = 1
+            N = self.b.shape[0]
+
+        self.y = np.zeros([N, num_iters])
+
+        if self.pivoting is None:
+            right_hand = self.b
+        elif self.pivoting == "partial":
+            right_hand = np.dot(P, self.b)
+        else:
+            right_hand = np.dot(P, self.b)
+            right_hand = np.dot(right_hand[:, np.newaxis].T, self.Q)
+            right_hand = right_hand.squeeze().T
+
+        for k in range(num_iters):
+            for i in range(N):
+                acc = KahanSum()
+                for j in range(i):
+                    acc.add(L[i, j]*self.y[j, k])
+                if self.b.ndim > 1:
+                    self.y[i, k] = right_hand[i, k] - acc.cur_sum()
+                else:
+                    self.y[i, k] = right_hand[i] - acc.cur_sum()
+
+    def _backward_d(self, P, L, U):
+        """
+        Solve the upper triangular system Ux = y
+        for x by back substitution.
+        """
+
+        if self.b.ndim > 1:
+            num_iters = self.b.shape[1]
+            N = self.b.shape[0]
+        else:
+            num_iters = 1
+            N = self.b.shape[0]
+
+        self.x = np.zeros([N, num_iters])
+
+        for k in range(num_iters):
+            for i in range(N-1, -1, -1):
+                acc = KahanSum()
+                for j in range(N-1, i, -1):
+                    acc.add(U[i, j]*self.x[j, k])
+                self.x[i, k] = (self.y[i, k] - acc.cur_sum()) / (U[i, i])
+
+        if self.b.ndim == 1:
+            self.x = self.x.squeeze()
+
     def _forward(self):
         """
         Solves the lower triangular system Ly = b

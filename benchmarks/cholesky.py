@@ -102,6 +102,68 @@ class Cholesky(object):
 
         return self.x
 
+    def solve_only(self, L, b):
+        """
+        Assumes you have called `decompose` previously.
+        """
+        self.b = b
+
+        self._forward_d(L)
+        self._backward_d(L)
+
+        return self.x
+
+    def _forward_d(self, L):
+        """
+        Solves the lower triangular system Ly = b
+        for y by forward substitution.
+        """
+        if self.b.ndim > 1:
+            num_iters = self.b.shape[1]
+            N = self.b.shape[0]
+        else:
+            num_iters = 1
+            N = self.b.shape[0]
+
+        self.y = np.zeros([N, num_iters])
+
+        for k in range(num_iters):
+            for i in range(N):
+                acc = KahanSum()
+                for j in range(i):
+                    acc.add(L[i, j]*self.y[j, k])
+                if self.b.ndim > 1:
+                    self.y[i, k] = \
+                        (self.b[i, k] - acc.cur_sum()) / (L[i, i])
+                else:
+                    self.y[i, k] = \
+                        (self.b[i] - acc.cur_sum()) / (L[i, i])
+
+    def _backward_d(self, L):
+        """
+        Solve the upper triangular system L^Tx = y
+        for x by back substitution.
+        """
+        if self.b.ndim > 1:
+            num_iters = self.b.shape[1]
+            N = self.b.shape[0]
+        else:
+            num_iters = 1
+            N = self.b.shape[0]
+
+        self.x = np.zeros([N, num_iters])
+
+        for k in range(num_iters):
+            for i in range(N-1, -1, -1):
+                acc = KahanSum()
+                for j in range(N-1, i, -1):
+                    acc.add(L.T[i, j]*self.x[j, k])
+                self.x[i, k] = \
+                    (self.y[i, k] - acc.cur_sum()) / (L.T[i, i])
+
+        if self.b.ndim == 1:
+            self.x = self.x.squeeze()
+
     def _forward(self):
         """
         Solves the lower triangular system Ly = b

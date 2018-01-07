@@ -26,6 +26,9 @@ class Cholesky(object):
     Args
     ----
     - A: a numpy array of shape (N, N).
+    - crout: Whether to use the Crout algorithm. From my
+      experience, setting it to False yields a faster
+      factorization.
 
     Returns
     -------

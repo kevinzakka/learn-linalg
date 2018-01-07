@@ -221,6 +221,22 @@ A = LL^T
 
 This factorization is sometimes referred to as "taking the square root" of the matrix A.
 
+### My attempt
+
+- v 0.1:
+
+In this first attempt, I'll be restricting myself to real matrices, hence symmetric ones.
+
+I'll also implement an inefficient way of computing the Cholesky factorization wherein I apply an elimination matrix on the left than on the right.
+
+- v 0.2:
+
+I implemented the book version. It takes advantage of the fact that A is symmetric, so we just need to work on the super-diagonal part. i.e., after taking the upper diagonal part of A, we act, at each iteration, like we've already left multiplied by the elimination matrix. So all we need to do is scale by the inverse of the square root of the pivot and eliminate the rows underneath. Rinse repeat for all rows.
+
+- v 0.3:
+
+In progress. I need to apply the Cholesky–Crout variant which contains explicit formulas for each entry in the triangular matrix.
+
 ### Applications of Cholesky Decomposition
 
 - solving Ax = b using normal equation A^TAx = A^Tb: Not really used in practice as it performs poorly with ill-conditioned A's.

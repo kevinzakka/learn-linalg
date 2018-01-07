@@ -1,7 +1,6 @@
 import numpy as np
 
-from utils import is_symmetric
-from row_ops import eliminate, scale
+from utils import is_symmetric, upper_diag
 
 
 class Cholesky(object):
@@ -33,7 +32,7 @@ class Cholesky(object):
     """
 
     def __init__(self, A):
-        self.R = np.array(A)
+        self.R = upper_diag(np.array(A), diag=True)
 
         # check that A is symmetric
         error_msg = 'A must be symmetric!'
@@ -77,8 +76,15 @@ class Cholesky(object):
         N = len(self.R)
 
         for i in range(N):
-            self.pivot = A[i, i]
+            self.pivot = self.R[i, i]
 
-            # eliminate column underneath
+            # eliminate subsequent rows
             for j in range(i+1, N):
+                for k in range(j, N):
+                    self.R[j, k] -= self.R[i, k] * (self.R[i, j] / self.pivot)
 
+            # scale the current row
+            for k in range(i, N):
+                self.R[i, k] /= np.sqrt(self.pivot)
+
+        return self.R

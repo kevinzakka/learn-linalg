@@ -17,6 +17,46 @@ Basically, we're mixing the n columns of A (each of dimension m) into a single c
 
 Usually when writing Ax = b, we think of A as acting on x to produce b. In contrast, we can also think about it as x acting on A to produce b.
 
+## Least Squares and When To Use What
+
+Solution of Ax = b is divided into 2 cases:
+
+- A is square
+- A is rectangular (i.e. tall, overdetermined, etc.)
+
+When A is rectangular, we can relax our equality and try to find the vector x that minimizes the squared euclidean distance ||Ax-b||. In that case, we're solving least squares.
+
+In any case, we can multiply A on the left by A.T and we obtain a square matrix to which we can apply the decompositions we learned to obtain the solution.
+
+We can solve Ax = b using:
+
+- Normal Equation
+- QR decomposition (g-s, householder)
+- LU decomposition (pivoting)
+- Cholesky decomposition
+- SVD
+
+Why is LU used rather than QR to solves square systems of equations?
+
+LU: 2/3 m^3
+QR: 4/3 m^3
+
+The factor of 2 is a reason. Also, historically, LU and the process of elimination have been known for centuries whilst QR is relatively recent. There is not enough of a compelling advantage for QR to supplant GE (according to Bau and David).
+
+When A is nxn, i.e. it is a square matrix, then we have a unique solution to the linear system of equations. In that case, we can use LU,
+
+- svd is used because it offers the highest accuracy when A is extremely ill-conditioned
+- but in your typical case, since its slow, ur better off with QR using householder
+
+So if writing a least squares solver, you can either:
+
+- solve using SVD, will be slowest but will have best accuracy.
+- apply QR decomposition on A directly. Will be faster than SVD and have good accuracy.
+- apply LU or Cholesky on A^TA. Cholesky will give the worst accuracy but will be fastest (cond(A^TA) = cond(A^2)). LU with pivoting will be slower than QR but have good accuracy.
+
+Thus LU and QR will do an excellent job and will be faster than SVD which does the best job.
+
+
 ## Gaussian Elimination
 
 Ax = b
@@ -180,6 +220,13 @@ Instead of seeking arbitrary lower and upper triangular factors L and U, Cholesk
 A = LL^T
 
 This factorization is sometimes referred to as "taking the square root" of the matrix A.
+
+### Applications of Cholesky Decomposition
+
+- solving Ax = b using normal equation A^TAx = A^Tb: Not really used in practice as it performs poorly with ill-conditioned A's.
+- Monte Carlo simulation: simulates a system with correlated variables. Cholesky decomposition is applied to the correlation matrix, providing a lower triangular matrix L, which when applied to a vector of uncorrelated samples, u, produces the covariance vector of the system.
+- non-linear optimization: update the Cholesky decomposition of an approximation of the Hessian matrix.
+- matrix inversion
 
 
 

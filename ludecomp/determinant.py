@@ -6,7 +6,7 @@ from utils import diagonal, multi_dot
 
 def det(X, log=False):
     """
-    Computes the determinant of a square array A.
+    Computes the determinant of a square matrix A.
 
     Concretely, first factorizes A into PLU and then computes
     the product of the determinant of P and U.

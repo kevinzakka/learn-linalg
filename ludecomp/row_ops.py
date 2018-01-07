@@ -59,7 +59,7 @@ def permute(N, idx):
 def scale(N, scalars):
     """
     Scales the rows of a square matrix A of shape (N, N)
-    according to a list of non-zero scalrs stored in the
+    according to a list of non-zero scalars stored in the
     list scalars.
 
     scalars can be of 2 forms:

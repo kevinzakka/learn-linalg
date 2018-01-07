@@ -7,7 +7,7 @@ from utils import unit_diag, lower_diag, upper_diag
 
 class LU(object):
     """
-    Performs the LU decomposition of a matrix A. This is useful
+    Computes the LU decomposition of a matrix A. This is useful
     for solving linear systems of equations with multiple right
     hand side vectors b.
 

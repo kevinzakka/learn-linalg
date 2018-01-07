@@ -101,7 +101,7 @@ def scale(N, scalars):
 
     # ensure that scalars are non zero
     error_msg = "[!] Scalars cannot be 0."
-    assert (0 not in scalars), error_msg
+    assert (0. not in scalars), error_msg
 
     # construct scaling matrix
     S = np.diag(scalars)

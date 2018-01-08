@@ -35,7 +35,7 @@ class Cholesky(object):
     - L: a lower triangular numpy array of shape (N, N).
     """
 
-    def __init__(self, A, crout=False):
+    def __init__(self, A, crout=True):
         self.crout = crout
         if self.crout:
             self.R = np.array(A)

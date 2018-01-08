@@ -1,68 +1,114 @@
 import numpy as np
 
-from PIL import Image
+from functools import reduce
 
 
-def str2bool(v):
-    return v.lower() in ('true', '1')
-
-
-def resize_array(x, size):
-    # 3D and 4D tensors allowed only
-    assert x.ndim in [3, 4], "Only 3D and 4D Tensors allowed!"
-
-    # 4D Tensor
-    if x.ndim == 4:
-        res = []
-        for i in range(x.shape[0]):
-            img = array2img(x[i])
-            img = img.resize((size, size))
-            img = np.asarray(img, dtype='float32')
-            img = np.expand_dims(img, axis=0)
-            img /= 255.0
-            res.append(img)
-        res = np.concatenate(res)
-        res = np.expand_dims(res, axis=1)
-        return res
-
-    # 3D Tensor
-    img = array2img(x)
-    img = img.resize((size, size))
-    res = np.asarray(img, dtype='float32')
-    res = np.expand_dims(res, axis=0)
-    res /= 255.0
-    return res
-
-
-def img2array(data_path, desired_size=None, expand=False, view=False):
+def herm(A):
     """
-    Util function for loading RGB image into a numpy array.
-
-    Returns array of shape (1, H, W, C).
+    Returns the conjugate transpose of A.
+    Equivalent to the H operator `A.H`.
     """
-    img = Image.open(data_path)
-    img = img.convert('RGB')
-    if desired_size:
-        img = img.resize((desired_size[1], desired_size[0]))
-    if view:
-        img.show()
-    x = np.asarray(img, dtype='float32')
-    if expand:
-        x = np.expand_dims(x, axis=0)
-    x /= 255.0
-    return x
+    return A.T.conj()
 
 
-def array2img(x):
+def is_hermitian(A):
     """
-    Util function for converting anumpy array to a PIL img.
-
-    Returns PIL RGB img.
+    Returns True if A is hermitian.
     """
-    x = np.asarray(x)
-    x = x + max(-np.min(x), 0)
-    x_max = np.max(x)
-    if x_max != 0:
-        x /= x_max
-    x *= 255
-    return Image.fromarray(x.astype('uint8'), 'RGB')
+    return np.allclose(A, A.T.conj())
+
+
+def is_symmetric(A):
+    """
+    Returns True if A is symmetric.
+    """
+    return np.allclose(A, A.T)
+
+
+def upper_diag(A, diag=False):
+    """
+    Grabs the super-diagonal elements of a
+    square matrix A.
+    """
+    m = len(A)
+    U = np.zeros_like(A)
+
+    for i in range(m):
+        l_b = i + 1
+        if diag:
+            l_b = i
+        for j in range(l_b, m):
+            U[i, j] = A[i, j]
+
+    return U
+
+
+def lower_diag(A, diag=False):
+    """
+    Grabs the sub-diagonal elements of a
+    square matrix A.
+    """
+    m = len(A)
+    L = np.zeros_like(A)
+
+    for i in range(m):
+        u_b = i
+        if diag:
+            u_b = i + 1
+        for j in range(0, u_b):
+            L[i, j] = A[i, j]
+
+    return L
+
+
+def unit_diag(A):
+    """
+    Fills the diagonal elements of a
+    square matrix A with 1's.
+    """
+    m = len(A)
+
+    for i in range(m):
+        A[i, i] = 1
+
+    return A
+
+
+def multi_dot(l):
+    """
+    Performs consecutive dot products of the
+    arrays in the list l from left to right.
+
+    For example, given l = [A, B, C], returns
+    `np.dot(np.dot(A, B), C)`.
+
+    """
+    return reduce(np.dot, l)
+
+
+def basis_vec(k, n):
+    """
+    Creates the k'th standard basis vector in R^n.
+    """
+
+    error_msg = "[!] k cannot exceed {}.".format(n)
+    assert (k < n), error_msg
+
+    b = np.zeros([n, 1])
+    b[k] = 1
+    return b
+
+
+def basis_arr(ks, n):
+    """
+    Creates an array of k'th standard basis vectors in R^n
+    according to each k in ks.
+    """
+
+    error_msg = "[!] ks cannot exceed {}.".format(n)
+    assert (np.max(ks) < n), error_msg
+
+    b = np.zeros([n, n])
+    for i, k in enumerate(ks):
+        b[i, k] = 1
+    return b

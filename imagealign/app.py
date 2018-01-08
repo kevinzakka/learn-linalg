@@ -1,9 +1,9 @@
 import os
-import time
+import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 
-from utils import img2array
+from imutils import img2array
 from matplotlib.widgets import Button
 
 
@@ -43,13 +43,11 @@ class InteractiveImage(object):
             self.ax[i].get_xaxis().set_visible(False)
             self.ax[i].get_yaxis().set_visible(False)
 
-        plt.suptitle('Click on the left and on the right.')
+        plt.suptitle('Select coordinate pairs from left and right')
         self.fig.canvas.mpl_connect('button_press_event', self.on_click)
         self.fig.canvas.mpl_connect('close_event', self.on_close)
 
     def on_clear(self, event):
-        print("pressed clear!")
-
         # clear coordinates
         self.temp = []
         self.coords = []
@@ -60,7 +58,6 @@ class InteractiveImage(object):
         self.curr = None
 
         # redraw
-        print('redrawing')
         self.draw()
         self.update()
 
@@ -101,9 +98,9 @@ class InteractiveImage(object):
             if self.curr == self.prev:
                 print("You haven't selected the second pair on the right!")
                 return
-            self.temp.append((event.x, event.y))
+            self.temp.append((event.xdata, event.ydata))
             subplot_num = '1'
-            c = plt.Circle((event.xdata, event.ydata), 10, color='b')
+            c = plt.Circle((event.xdata, event.ydata), 2, color='b')
             self.ax[0].add_patch(c)
             self.prev = self.curr
         elif event.inaxes == self.ax[1]:
@@ -114,11 +111,11 @@ class InteractiveImage(object):
             if self.curr == self.prev:
                 print("You haven't select the first pair on the left!")
                 return
-            self.temp.append((event.x, event.y))
+            self.temp.append((event.xdata, event.ydata))
             self.coords.append(self.temp)
             self.temp = []
             subplot_num = '2'
-            c = plt.Circle((event.xdata, event.ydata), 10, color='b')
+            c = plt.Circle((event.xdata, event.ydata), 2, color='b')
             self.ax[1].add_patch(c)
             self.prev = self.curr
         else:
@@ -140,12 +137,8 @@ class InteractiveImage(object):
         if not os.path.exists(dump_dir):
             os.makedirs(dump_dir)
 
-        timestr = time.strftime("%Y%m%d-%H%M%S")
-        filename = dump_dir + 'coords_' + timestr + '.txt'
-        with open(filename, 'wb') as f:
-            for pair in self.coords:
-                f.write("{}, {}\n".format(pair[0], pair[1]).encode())
-
+        # dump and exit
+        pickle.dump(self.coords, open(dump_dir + 'coords.p', "wb"))
         plt.close()
 
     def show(self):
@@ -154,14 +147,3 @@ class InteractiveImage(object):
     def update(self):
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
-
-
-def main():
-
-    img_dir = './imgs/'
-    inter = InteractiveImage(img_dir)
-    inter.show()
-
-
-if __name__ == '__main__':
-    main()

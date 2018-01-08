@@ -257,6 +257,10 @@ The unknowns are thus A and b. To solve for them, we can minimize the square of 
 
 Thus, we can solve for A and b and then do A^-1(y - b) to realign the image. Since we have oversampled our number of points, A will be overdetermined.
 
+y = crooked
+x = reference
+
+
 
 
 

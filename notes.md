@@ -249,6 +249,13 @@ In progress. I need to apply the Cholesky–Crout variant which contains explici
 - aligning 2 images
 - unblur using deconvolution
 
+Imagine 2 photographs of the same scene. In the image alignment task, we mark a number of points x (x1, x2) and y (y1, y2) such that x in image 1 corresponds to y in image 2. Since we are bound to make mistakes, it's better to oversample the number of necessary pairs (x, y). 
+
+A reasonable assumption is that there exists some A and a translation vector b such that y = Ax + b. Essentially, an affine transformation has been applied on image 1 to produce image 2.
+
+The unknowns are thus A and b. To solve for them, we can minimize the square of [(Ax + b) - y].
+
+Thus, we can solve for A and b and then do A^-1(y - b) to realign the image. Since we have oversampled our number of points, A will be overdetermined.
 
 
 

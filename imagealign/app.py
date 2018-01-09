@@ -27,7 +27,7 @@ class InteractiveImage(object):
         self.fig, self.ax = plt.subplots(nrows=1, ncols=self.N)
         self.draw()
 
-        # add clear button
+        # add clear and done button
         clear_ax = plt.axes([0.7, 0.05, 0.1, 0.075])
         self.clear = Button(clear_ax, 'Clear')
         self.clear.on_clicked(self.on_clear)
@@ -91,9 +91,8 @@ class InteractiveImage(object):
         the original reference image, and the crooked
         image in 2 seperate lists.
         """
-        self.counter += 1
-
         if event.inaxes == self.ax[0]:
+            self.counter += 1
             self.curr = 0
             if self.curr == self.prev:
                 print("You haven't selected the second pair on the right!")
@@ -104,6 +103,7 @@ class InteractiveImage(object):
             self.ax[0].add_patch(c)
             self.prev = self.curr
         elif event.inaxes == self.ax[1]:
+            self.counter += 1
             if self.counter == 1:
                 print("You must select from the left first!")
                 return
@@ -131,6 +131,9 @@ class InteractiveImage(object):
         """
         if not self.coords:
             plt.close()
+            return
+        if self.counter < 12:
+            print("Need at least 6 points for a stable result!")
             return
 
         dump_dir = './dump/'

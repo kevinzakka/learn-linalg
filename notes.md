@@ -10,10 +10,10 @@ $$
 
 Basically, we're mixing the n columns of A (each of dimension m) into a single column vector b of dimension m.
 
-[b] = [a1|a2|...|an][x1  = x1[a1] + x2[a2] + ... + xn[an]
-                     x2
-                     ...
-                     xn]
+[b] = [a1|a2|...|an][x1]  = x1[a1] + x2[a2] + ... + xn[an]
+                    [x2]
+                    [..]
+                    [xn]
 
 Usually when writing Ax = b, we think of A as acting on x to produce b. In contrast, we can also think about it as x acting on A to produce b.
 
@@ -249,16 +249,22 @@ In progress. I need to apply the Cholesky–Crout variant which contains explici
 - aligning 2 images
 - unblur using deconvolution
 
+
+#### Image Alignment
+
 Imagine 2 photographs of the same scene. In the image alignment task, we mark a number of points x (x1, x2) and y (y1, y2) such that x in image 1 corresponds to y in image 2. Since we are bound to make mistakes, it's better to oversample the number of necessary pairs (x, y). 
 
 A reasonable assumption is that there exists some A and a translation vector b such that y = Ax + b. Essentially, an affine transformation has been applied on image 1 to produce image 2.
 
-The unknowns are thus A and b. To solve for them, we can minimize the square of [(Ax + b) - y].
+The unknowns are thus A and b. To solve for them, we can minimize the square of [(Ax + b) - y]. Since we have oversampled our number of points, A will be overdetermined.
 
-Thus, we can solve for A and b and then do A^-1(y - b) to realign the image. Since we have oversampled our number of points, A will be overdetermined.
+Applications include:
 
-y = crooked
-x = reference
+- align images that were taken at different times or with different sensors
+- correct images for lens distortion
+- correct effects of camera orientation
+
+
 
 
 

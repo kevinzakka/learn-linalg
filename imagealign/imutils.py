@@ -1,10 +1,26 @@
+import pickle
 import numpy as np
 
 from PIL import Image
 
 
-def str2bool(v):
-    return v.lower() in ('true', '1')
+def load_coords(filename):
+    """
+    Load coordinate pickle dump and return:
+
+    - y: the coordinates of the crooked image
+    - x: the coordinates of the reference image
+    """
+    dump_dir = './dump/' + filename
+    coords = pickle.load(open(dump_dir, "rb"))
+
+    x = [[l[0][1], l[0][0]] for l in coords]
+    y = [[l[1][1], l[1][0]] for l in coords]
+
+    x = np.array(x)
+    y = np.array(y)
+
+    return x, y
 
 
 def resize_array(x, size):

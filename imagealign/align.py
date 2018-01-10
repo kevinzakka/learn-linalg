@@ -10,7 +10,8 @@ from app import InteractiveImage
 def main():
 
     img_dir = './imgs/'
-    inter = InteractiveImage(img_dir)
+    size = (800, 800)
+    inter = InteractiveImage(img_dir, size)
     inter.show()
 
 

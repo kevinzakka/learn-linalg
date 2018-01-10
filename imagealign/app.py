@@ -13,8 +13,10 @@ class InteractiveImage(object):
     similar points between a crooked image and its
     aligned reference counterpart.
     """
-    def __init__(self, img_dir):
+    def __init__(self, img_dir, size):
         self.dir = img_dir
+        self.size = size
+        self.H = size[0]
         self.imgs = self.read_imgs()
         self.counter = 0
         self.prev = 1
@@ -74,11 +76,14 @@ class InteractiveImage(object):
             if any(fn.endswith(ext) for ext in included_extensions)
         ]
 
+        if "crooked" in file_names[0]:
+            file_names.reverse()
+
         # loop and convert to numpy array
         imgs = []
         for i in range(len(file_names)):
             filepath = os.path.join(self.dir, file_names[i])
-            imgs.append(img2array(filepath, desired_size=(800, 800)))
+            imgs.append(img2array(filepath, desired_size=self.size))
         imgs = np.array(imgs)
 
         return imgs
@@ -97,7 +102,7 @@ class InteractiveImage(object):
             if self.curr == self.prev:
                 print("You haven't selected the second pair on the right!")
                 return
-            self.temp.append((event.xdata, event.ydata))
+            self.temp.append((event.ydata, event.xdata))
             subplot_num = '1'
             c = plt.Circle((event.xdata, event.ydata), 2, color='b')
             self.ax[0].add_patch(c)
@@ -111,7 +116,7 @@ class InteractiveImage(object):
             if self.curr == self.prev:
                 print("You haven't select the first pair on the left!")
                 return
-            self.temp.append((event.xdata, event.ydata))
+            self.temp.append((event.ydata, event.xdata))
             self.coords.append(self.temp)
             self.temp = []
             subplot_num = '2'

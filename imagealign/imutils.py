@@ -4,6 +4,16 @@ import numpy as np
 from PIL import Image
 
 
+def homogenize(x):
+    """
+    Homogenize a vector of coordinates,
+    i.e. add a column of ones to a 2D
+    (x, y) tuple to make it 3D.
+    """
+    ones = np.ones((x.shape[0], 1), dtype=x.dtype)
+    return np.append(x, ones, axis=1)
+
+
 def load_coords(filename):
     """
     Load coordinate pickle dump and return:
@@ -14,8 +24,8 @@ def load_coords(filename):
     dump_dir = './dump/' + filename
     coords = pickle.load(open(dump_dir, "rb"))
 
-    x = [[l[0][1], l[0][0]] for l in coords]
-    y = [[l[1][1], l[1][0]] for l in coords]
+    x = [[l[0][0], l[0][1]] for l in coords]
+    y = [[l[1][0], l[1][1]] for l in coords]
 
     x = np.array(x)
     y = np.array(y)

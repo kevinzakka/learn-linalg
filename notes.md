@@ -261,6 +261,7 @@ The unknowns are thus A and b. To solve for them, we can minimize the square of 
 Applications include:
 
 - align images that were taken at different times or with different sensors
+- align touch points for multi-touch gestures or calibration
 - correct images for lens distortion
 - correct effects of camera orientation
 

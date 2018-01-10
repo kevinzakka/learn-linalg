@@ -114,7 +114,7 @@ class InteractiveImage(object):
                 return
             self.curr = 1
             if self.curr == self.prev:
-                print("You haven't select the first pair on the left!")
+                print("You haven't selected the first pair on the left!")
                 return
             self.temp.append((event.ydata, event.xdata))
             self.coords.append(self.temp)
@@ -124,6 +124,7 @@ class InteractiveImage(object):
             self.ax[1].add_patch(c)
             self.prev = self.curr
         else:
+            print("You selected outside the subplots!")
             return
 
         msg = "subplot {}: x={}, y={}"
@@ -132,7 +133,7 @@ class InteractiveImage(object):
 
     def on_close(self, event):
         """
-        Dump the coordinates as a text file.
+        Pickle dump the recorded coordinates.
         """
         if not self.coords:
             plt.close()

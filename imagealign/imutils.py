@@ -14,7 +14,7 @@ def homogenize(x):
     return np.append(x, ones, axis=1)
 
 
-def load_coords(filename):
+def load_coords(filename, H, W):
     """
     Load coordinate pickle dump and return:
 
@@ -29,6 +29,9 @@ def load_coords(filename):
 
     x = np.array(x)
     y = np.array(y)
+
+    x = ((2*x) / W) - 1
+    y = ((2*y) / H) - 1
 
     return x, y
 

@@ -265,6 +265,34 @@ Applications include:
 - correct images for lens distortion
 - correct effects of camera orientation
 
+## QR Decomposition
+
+We have learned about least squares Ax approx b and how a solution x must satisfy the normal equations (A.TA)x=A.Tb. In particular, we have seen how Cholesky decomposition utilizes the special structure of A.TA to quickly solve for x.
+
+One large problem limiting the use of Cholesky is the condition number. It is the square of that of A. Thus, while generic linear strategies might work on A.TA when the least-squares problem is “easy,” when the columns of A are nearly linearly dependent these strategies are likely to generate considerable error since they do not deal with A directly.
+
+### Orthogonality
+
+The least-squares problem is difficult when the columns of A are very similar, i.e. nearly linearly dependent. So when is LS most straightforward?
+
+Well, the easiest linear system is Ix = b, i.e. x=b. This is very unlikely but it could happen that A.T A = I. Let's call such a matrix Q. Such a matrix Q has unit length columns that are orthogonal to one another. They form an orthonormal basis for the column space of Q.
+
+We motivated our discussion by asking when we can expect Q.TQ = I. Now it is easy to see that this occurs when the columns of Q are orthonormal. Furthermore, Q.inv = Q.T. Thus solving Qx = b is as easy as multiplying both sides by the transpose of Q.
+
+Orthonormality also has a strong geometric interpretation. In fact, we can regard orthogonal vectors a and b as being perpendicular. So an orthonormal set of vectors simply is a set od unit-length perpendicular vectors in R^n. 
+
+- If Q is orthogonal, then its action does not affect the length of vectors:
+
+||Qx||^2 = (Qx).T(Qx) = x.TQ.TQx = x.Tx = x.x = ||x||^2
+
+- If Q is orthogonal, Q cannot affect the angle between 2 vectors:
+
+(Qx).(Qy) = (Qx).T (Qy) = x.TQ.TQy = x.Ty = x.y
+
+From this standpoint, if Q is orthogonal, then Q represents an isometry of R^n, that is, it preserves lengths and angles. It can rotate or reflect vectors, but it cannot scale or shear them.
+
+### Strategy for Non-Orthogonal Matrices
+
 
 
 

@@ -180,8 +180,7 @@ By unit, we mean that the elements on the diagonal of L_k are equal to 1. I'll b
 - show that L_k is unit lower-triangular
 - show that the inverse of L_k is L_k with the subdiagonal entries negated
 - show that the product of unit lower-triangular is unit lower-triangular
-- thus L which is the product of all these L_k's is a unit lower-triangular matrix 
-  with the subdiagonal entries of all the seperate L_k's in the correct position.
+- thus L which is the product of all these L_k's is a unit lower-triangular matrix with the subdiagonal entries of all the seperate L_k's in the correct position.
 
 ### Determinant of a Matrix
 
@@ -292,6 +291,95 @@ Orthonormality also has a strong geometric interpretation. In fact, we can regar
 From this standpoint, if Q is orthogonal, then Q represents an isometry of R^n, that is, it preserves lengths and angles. It can rotate or reflect vectors, but it cannot scale or shear them.
 
 ### Strategy for Non-Orthogonal Matrices
+
+Most of the time, our matrices A when solving Ax=b or the corresponding least-squares problem will not be orthogonal. As such, we need to do additional computations to connect the general case to the orthogonal one.
+
+Recall that the column space of A consists of all possible products Ax, i.e. col A represents the span of the columns f A. Suppose now we have a matrix B which is invertible. Then:
+
+col A = col AB
+
+This lemma suggest an alternative strategy to Gaussian elimination: apply column operations to A by post-multiplication until the columns are orthonormal. That is, we obtain a product `Q=AE1E2E3...Ek` such that Q is orthonormal. As long as the E_i's are invertible, the lemma shows that col Q = col A. Inverting these operations yields a factorization `A=QR` where `R=(Ek.inv)(E_k-1.inv)(...)(E_1.inv)`.
+
+As in LU factorization, if we design R carefully, the solution of least-squares problems Ax=b may simplify. In particular, when A = QR, we can write the solution to A.TAx = A.Tb as
+
+x = R.inv Q.T b
+<==>
+Rx = Q.Tb
+
+Thus, if we design R to be a triangular matrix, the solving the linear system Rx=Q.Tb is as simple as back-substitution. So let's see how we can design strategies for such a factorization.
+
+### Gram-Schmidt Orthogonalization
+
+This is the simplest approach for finding QR factorizations but it can suffer from numerical issues.
+
+Suppose we have two vectors a and b. Then we could easily ask which multiple of a is closest to b. Mathematically, this is equivalent to minimizing ||ca-b||^2 over all possible c. In the least-squares sense, this is a problem ac ~ b and the solution a.Ta.c = a.Tb gives the solution:
+
+c = (a.b)/(norm(a))
+
+We denote this projection of "b onto a" as:
+
+proj(b, a) = ca = (<a,a>/<a,a>)a = (a.b/norm(a))a
+
+Obviously proj(b, a) is parallel to a (by definition of colinearity). What about the remained b - proj(b, a)? Let's find out:
+
+a.(b - proj(b, a)) = a.b - a.((a.b/norm(a))a) = a.b - a.b = 0
+
+Thus we have decomposed b into a component parallel to a and another component orthogonal to a.
+
+Suppose now that a.hat is orthonormal. The hat is for a vector that has unit length. For any single i, we can that:
+
+proj(b, a_i) = (a_i, b)a_i
+
+The norm term dissapears because a_i is orthonormal. Finally, we can show that when a set of k a vectors are orthonormal, then the projection of a vector b onto the span of these k vectors is equal to the linear combination of (a_k, b).a_k
+
+The observations above lead to a simple algorithm for orthogonalization, or finding an orthogonal basis {a_1, ... a_k} whose span is the same as that of a set of linearly independent input vectors {v_1, ..., v_k}.
+
+Orthogonalization Algorithm
+
+1. Set a_1 = v_1 / norm(v1)
+
+i.e. we take a_1 to be a unit vector parallel to v1. Thus a_1 is our first orthonormal vector.
+
+2. For i from 2 to k:
+
+- compute p_i = proj(v_i, span(a1, ..., a_{i-1}))
+- define a_i = (v_i - p_i) / (norm(v_i - p_i))
+
+Note the following:
+
+1. Dividing column i of A by its norm is equivalent to post-multiplying A by a kxk diagonal matrix.
+2. Subtracting off the projection of a column onto the orthonormal columns to its left as in step 2 is equivalent to post-multiplying by an upper-triangular matrix.
+
+Final note: very serious numerical instabilities due to the subtraction step and subsequent step.
+
+Let's prove 1 and 2.
+
+1.
+
+We already know that row operations are done by pre-multiplying A by some elementary matrix E. So when we post multiply by E, we affect the columns.
+
+Now recall that the scaling matrix was a diagonal matrix where the scaling factors for each row were on the diagonals. Thus, in our case, if we want to divide column 1 of a 3x3 array A by 2, then we post-multiply A by E where E is zero everywhere except in the very first entry which contains a 1/2.
+
+2. Subtract column 2 from column 1 and column 0 is equivalent to post-multiplying by an upper triangular matrix.
+
+Previously, we learned that to subtract c times row k from row l, we apply an elimination matrix E
+
+E = I + (c)(e_l)(e_k.T)
+
+where E is lower-triangular. Then we pre-multiply A by it.
+
+If we want to add c times column k to column l, then this is equal to
+
+E = I + (c)(e_k)(e_l.T)
+
+where E is an upper triangular matrix. Then we post-multiply A by it.
+
+Note that these are transposes of another. In fact, we know that the transpose of a lower-triangular is upper-triangular. And here's a quick proof:
+
+[I + (c)(e_l)(e_k.T)].T = I.T + (c)(e_k.T.T)(e_l.T) = I + (c)(e_k)(e_l.T)
+
+
+
 
 
 

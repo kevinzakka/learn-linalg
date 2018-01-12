@@ -11,6 +11,7 @@ Currently reinforcing my linear algebra and numerical analysis by reimplementing
 - [cholesky](https://github.com/kevinzakka/linalg/tree/master/cholesky): cholesky decomposition for symmetric positive definite matrices A.
 - [benchmarks](https://github.com/kevinzakka/linalg/tree/master/benchmarks): speed comparisons of different decompositions for solving `Ax = b`.
 - [imagealign](https://github.com/kevinzakka/linalg/tree/master/imagealign): align a crooked image using least squares.
+- [inverse](https://github.com/kevinzakka/linalg/tree/master/inverse): compute the inverse of a square matrix A using PLU decomposition.
 
 ## Resources
 

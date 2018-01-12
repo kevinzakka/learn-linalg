@@ -7,11 +7,12 @@ Currently reinforcing my linear algebra and numerical analysis by reimplementing
 - [kahan](https://github.com/kevinzakka/linalg/tree/master/kahan): kahan summation for adding finite precision floating point numbers.
 - [gelim](https://github.com/kevinzakka/linalg/tree/master/gelim): gaussian elimination with naive, partial and full pivoting for solving `Ax = b`.
 - [ludecomp](https://github.com/kevinzakka/linalg/tree/master/ludecomp): `LU`, `PLU` and `PLUQ` decomposition for solving `Ax = b`.
-- [determinant](https://github.com/kevinzakka/linalg/blob/master/ludecomp/determinant.py): compute the determinant (or log det) of a square matrix A using LU factorization.
+- [determinant](https://github.com/kevinzakka/linalg/blob/master/ludecomp/determinant.py): compute the determinant (or log det) of a square matrix A using PLU factorization.
 - [cholesky](https://github.com/kevinzakka/linalg/tree/master/cholesky): cholesky decomposition for symmetric positive definite matrices A.
 - [benchmarks](https://github.com/kevinzakka/linalg/tree/master/benchmarks): speed comparisons of different decompositions for solving `Ax = b`.
 - [imagealign](https://github.com/kevinzakka/linalg/tree/master/imagealign): align a crooked image using least squares.
-- [inverse](https://github.com/kevinzakka/linalg/tree/master/inverse): compute the inverse of a square matrix A using PLU decomposition.
+- [inverse](https://github.com/kevinzakka/linalg/tree/master/inverse): compute the inverse of a square matrix A using PLU factorization.
+- [qrdecomp](https://github.com/kevinzakka/linalg/tree/master/qrdecomp): compute the QR factorization of any matrix A using various methods.
 
 ## Resources
 

@@ -378,6 +378,8 @@ Note that these are transposes of another. In fact, we know that the transpose o
 
 [I + (c)(e_l)(e_k.T)].T = I.T + (c)(e_k.T.T)(e_l.T) = I + (c)(e_k)(e_l.T)
 
+We can think of Gram-Schmidt as triangular orthogonalization since it makes the columns of a matrix orthonormal via a sequence of matrix operations that can be interpreted as multiplication on the right by upper-triangular matrices.
+
 
 
 

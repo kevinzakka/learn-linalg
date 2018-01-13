@@ -1,21 +1,33 @@
 import numpy as np
 
 
+
+
 def QR(object):
     """
-    Computes the QR decomposition of a mxn matrix A. This
+    Computes the QR decomposition of an mxn matrix A. This
     is useful for solving linear systems of equations of the
-    form Ax = b.
+    form Ax = b for non-square matrices, i.e. least squares.
 
-    QR decomposition is more numerically robust than LU and
-    Cholesky for poorly-conditioned matrices. Cholesky suffers
-    from a squared condition number as opposed to LU and LU is
-    restricted to square matrices A.
+    Params
+    ------
+    - A: a numpy array of shape (M, N).
 
+    Returns
+    -------
+    - Q: a numpy array of shape (M, N).
+    - R: a numpy array of shape (N, N).
     """
 
     def __init__(self, A):
-        pass
+        self.A = np.array(A)
 
     def decompose(self):
-        pass
+        """
+        Starting initially with Gram-Schmidt.
+
+        Q = AE_1E_2...E_k
+        R = (E_1E_2...E_k).inv
+        """
+        self.Q = self.A
+

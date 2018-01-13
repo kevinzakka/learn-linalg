@@ -4,6 +4,13 @@ from sum import KahanSum
 from functools import reduce
 
 
+def is_symmetric(A):
+    """
+    Returns True if A is symmetric.
+    """
+    return np.allclose(A, A.T)
+
+
 def diagonal(A):
     """
     Grabs the diagonal elements of a square

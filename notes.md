@@ -380,6 +380,15 @@ Note that these are transposes of another. In fact, we know that the transpose o
 
 We can think of Gram-Schmidt as triangular orthogonalization since it makes the columns of a matrix orthonormal via a sequence of matrix operations that can be interpreted as multiplication on the right by upper-triangular matrices.
 
+### Pseudocode
+
+Ok so we need to implement Gram-Schmidt. I know that the algorithm is equivalent to applying matrix operations on the right, i.e. after a series of operations, our matrix A is reduced to:
+
+Q = A(E_1E_2...E_k)
+
+And thus, we can invert the parentheses to obtain A = QR since inverting triangular matrices is easy. Another way of obtain R is to multiply Q.T and A since
+
+A = QR ==> Q.T A = Q.T Q R = R since Q is orthogonal and Q.T Q = I
 
 
 

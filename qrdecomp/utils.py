@@ -4,6 +4,15 @@ from sum import KahanSum
 from functools import reduce
 
 
+def proj(b, a):
+    """
+    Calculate the projection of b onto a.
+    """
+    num = np.dot(np.dot(a, b), a)
+    denum = l2_norm(a)
+    return num / denum
+
+
 def l2_norm(x):
     """
     L2 or "euclidean" norm.

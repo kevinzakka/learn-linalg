@@ -1,9 +1,9 @@
 import numpy as np
 
+from utils import proj, l2_norm
 
 
-
-def QR(object):
+class QR(object):
     """
     Computes the QR decomposition of an mxn matrix A. This
     is useful for solving linear systems of equations of the
@@ -20,14 +20,30 @@ def QR(object):
     """
 
     def __init__(self, A):
-        self.A = np.array(A)
+        self.A = np.array(A, dtype=np.float64)
 
     def decompose(self):
         """
         Starting initially with Gram-Schmidt.
-
-        Q = AE_1E_2...E_k
-        R = (E_1E_2...E_k).inv
         """
-        self.Q = self.A
+        self.Q = np.array(self.A)
+        self.R = np.zeros_like(self.A)
+
+        M, N = self.Q.shape
+
+        # for each column
+        for i in range(N):
+            # for each column on the left of current
+            for j in range(i):
+                # calculate projection of ith col on jth col
+                p = proj(self.Q[:, i], self.Q[:, j])
+                self.Q[:, i] -= p
+            # normalize ith colum
+            self.Q[:, i] /= l2_norm(self.Q[:, i])
+
+        # compute R
+        self.R = np.dot(self.Q.T, self.A)
+
+        return self.Q, self.R
+
 

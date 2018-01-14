@@ -21,14 +21,23 @@ class QR(object):
 
     def __init__(self, A):
         self.A = np.array(A, dtype=np.float64)
-
-    def decompose(self):
-        """
-        Starting initially with Gram-Schmidt.
-        """
         self.Q = np.array(self.A)
         self.R = np.zeros_like(self.A)
 
+    def householder(self):
+        """
+        Compute QR using Householder triangularization.
+        """
+        
+
+
+    def gram_schmidt(self):
+        """
+        Compute QR using Gram-Schmidt orthogonalization.
+
+        Suffers from numerical instabilities when 2 vectors
+        are nearly orthogonal so not really used in practice.
+        """
         M, N = self.Q.shape
 
         # for each column
@@ -38,7 +47,7 @@ class QR(object):
                 # calculate projection of ith col on jth col
                 p = proj(self.Q[:, i], self.Q[:, j])
                 self.Q[:, i] -= p
-            # normalize ith colum
+            # normalize ith column
             self.Q[:, i] /= l2_norm(self.Q[:, i])
 
         # compute R

@@ -226,11 +226,11 @@ This factorization is sometimes referred to as "taking the square root" of the m
 
 In this first attempt, I'll be restricting myself to real matrices, hence symmetric ones.
 
-I'll also implement an inefficient way of computing the Cholesky factorization wherein I apply an elimination matrix on the left than on the right.
+I'll also implement an inefficient way of computing the Cholesky factorization wherein I apply an elimination matrix on the left then on the right.
 
 - v 0.2:
 
-I implemented the book version. It takes advantage of the fact that A is symmetric, so we just need to work on the super-diagonal part. i.e., after taking the upper diagonal part of A, we act, at each iteration, like we've already left multiplied by the elimination matrix. So all we need to do is scale by the inverse of the square root of the pivot and eliminate the rows underneath. Rinse repeat for all rows.
+I implemented the book version. It takes advantage of the fact that A is symmetric, so we just need to work on the super-diagonal part. i.e., after taking the upper diagonal part of A, we act, at each iteration, like we've already left-multiplied by the elimination matrix. So all we need to do is scale by the inverse of the square root of the pivot and eliminate the rows underneath. Rinse repeat for all rows.
 
 - v 0.3:
 
@@ -247,7 +247,6 @@ In progress. I need to apply the Cholesky–Crout variant which contains explici
 
 - aligning 2 images
 - unblur using deconvolution
-
 
 #### Image Alignment
 
@@ -391,6 +390,65 @@ And thus, we can invert the parentheses to obtain A = QR since inverting triangu
 A = QR ==> Q.T A = Q.T Q R = R since Q is orthogonal and Q.T Q = I
 
 
+### Householder Transformations
+
+A bit similar to Gaussian elimination in the sense that we're doing orthogonal triangularization.
+
+We pre-multiply A by orthogonal matrices Q_k until we obtain an upper-triangular matrix R.
+
+Then since the product of orthogonal matrices is orthogonal and the inverse is the transpose, we can obtain Q by taking the reverse transpose of each.
+
+The row operation matrices used in GE and LU will not suffice for QR since they are not orthogonal. A strategy is to look for matrices that preserve angles and lengths, so intuitively, they can only rotate and reflect vectors.
+
+Thankfully, reflections can be easy to write in terms of projections.
+
+A Householder transformation of a vector x is its reflection with respect to a plane (or hyperplane) through the origin represented by its normal vector v of unit length v.Tv = norm(v)^2 = 1. The formula for the Householder transformation is:
+
+x' = x - 2vv.Tx
+
+where vv.Tx is the projection of x onto v. In general, the projection of a vector b onto a is equal to
+
+proj(b, a) = ca = (a.b)a/(norm(a)^2)
+
+Thus, the projection of x onto v is
+
+proj(x, v) = cv = [(x.v)v] / norm(v)^2 = (x.v)v = (v.Tx)v = v(v.Tx)
+
+in the last step, v.Tx is a scalar so we can use associativity.
+
+Thus proj(x, v) = vv.Tx.
+
+The reflection of x can be considered as a linear transformation represented by a matrix P applied to x:
+
+x' = Px = (I - 2vv.T)x where P = I - 2vv.T is a Householder matrix.
+
+We note that P.T = P and PP = I, thus P.T = P.inv, i.e. P is an orthogonal matrix.
+
+As any vector u can be normalized v = u / norm(u)^2 to have unit norm, the Householder matrix above can be written as:
+
+P = I - 2vv.T = I - (2uu.T(/(norm(u)^2)
+
+If we define specifically a vector u = x - norm(x)e_1
+
+where x = [x_1, x_2, ..., x_n].T is any N-D column vector and e_1 = [1, 0, ..., 0] is the first standard basis vector, then the norm squared of this vector is:
+
+norm(u)^2 = (x - norm(x)e_1).T(x - norm(x)e_1) = 2(norm(x)^2 - norm(x)x_1)
+
+When the Householder matrix P based on this particular vector u is applied to the vector x itself, it produces the reflection:
+
+x' = Px = (I - 2vv.T)x = (I - (2uu.T)/(norm(u)^2)) = (I - [2u(x-norm(x)e_1)].T/(norm(u)^2))x = norm(x)[1, 0, ..., 0].T
+
+i.e.
+
+x' = ||x||e_1
+
+We see that all elements in x' except the first one are eliminated to zero. This feature of the Householder transformation is the reason why it is widely used.
+
+
+
+### Note
+
+In numpy, the `dot` method is equivalent to matrix multiplication for 2D arrays and inner product of vectors for 1D array.
 
 
 

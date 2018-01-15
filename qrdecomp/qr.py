@@ -1,6 +1,6 @@
 import numpy as np
 
-from utils import proj, l2_norm
+from utils import projection, l2_norm
 
 
 class QR(object):
@@ -28,8 +28,10 @@ class QR(object):
         """
         Compute QR using Householder triangularization.
         """
-        
+        M, N = self.A.shape
 
+        for i in range(N):
+            
 
     def gram_schmidt(self):
         """
@@ -45,7 +47,7 @@ class QR(object):
             # for each column on the left of current
             for j in range(i):
                 # calculate projection of ith col on jth col
-                p = proj(self.Q[:, i], self.Q[:, j])
+                p = projection(self.Q[:, i], self.Q[:, j])
                 self.Q[:, i] -= p
             # normalize ith column
             self.Q[:, i] /= l2_norm(self.Q[:, i])
@@ -54,5 +56,3 @@ class QR(object):
         self.R = np.dot(self.Q.T, self.A)
 
         return self.Q, self.R
-
-

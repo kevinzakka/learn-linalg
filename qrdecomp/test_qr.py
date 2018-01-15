@@ -13,7 +13,7 @@ class QRTest(unittest.TestCase):
     def test_gram_schmidt(self):
         T = np.random.randn(100, 100)
 
-        actual = QR(T).decompose()
+        actual = QR(T).gram_schmidt()
         expected = LA.qr(T)
 
         self.assertTrue(np.allclose(a, e) for a, e in zip(actual, expected))

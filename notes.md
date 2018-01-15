@@ -446,12 +446,6 @@ We see that all elements in x' except the first one are eliminated to zero. This
 
 
 
-### Note
-
-In numpy, the `dot` method is equivalent to matrix multiplication for 2D arrays and inner product of vectors for 1D array.
-
-
-
 
 
 

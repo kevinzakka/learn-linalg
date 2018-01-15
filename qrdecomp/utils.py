@@ -4,13 +4,80 @@ from sum import KahanSum
 from functools import reduce
 
 
-def proj(b, a):
+def reflection(x, u, apply=False):
     """
-    Calculate the projection of b onto a.
+    A reflection is a linear transformation
+    which reflects a vector x with respect to
+    a hyperplane through the origin represented
+    by its normal vector v of unit length.
+
+    Concretely, the reflection can be considered
+    a linear transformation represented by a matrix
+    P, i.e. `x' = Px`.
+
+    Params
+    ------
+    - x: A numpy array of shape (N, 1). The column
+      vector to reflect.
+    - u: A numpy array of shape (N, 1). The unnormalized
+      vector normal to the hyperplane.
+    - apply: bool indicating whether to apply the reflecton
+      directly and obtain x' or return the matrix P if set
+      to `False`.
+
+    Returns
+    -------
+    - refl: a numpy array of shape (N, 1) if apply is `True`.
+    - P: a numpy array of shape (N, N) if apply is `False`.
     """
-    num = np.dot(np.dot(a, b), a)
-    denum = l2_norm(a)
-    return num / denum
+    # grab dimension of column vector
+    N = x.shape[0]
+
+    # then normalize u
+    v = u / l2_norm(u)
+
+    if apply:
+        # compute projection of x onto v
+        proj = projection(x, v, norm=True)
+
+        # and finally reflect
+        refl = x - 2*proj
+
+        return refl
+    else:
+        P = np.eye(N) - 2*np.dot(v, v.T)
+        return P
+
+
+def projection(b, a, norm=False):
+    """
+    The projection of b onto a is the orthogonal
+    projection of b onto a straight line parallel to a.
+
+    The projection is parallel to a, i.e. it is the product
+    of a constant called the scalar projection with a unit
+    vector in the direction of a:
+
+    `proj(b, a) = (c)a = (a.Tb/a.Ta)a`
+
+    Params
+    ------
+    - b: a numpy array of shape (N, 1).
+    - a: a numpy array of shape (N, 1).
+    - norm: bool indicating whether a is normalized
+      or not.
+
+    Returns
+    -------
+    - proj: a numpy array of shape (N, 1).
+    """
+    if norm:
+        proj = np.dot(np.dot(a, a.T), b)
+    else:
+        c = np.dot(a.T, b) / np.dot(a.T, a)
+        proj = c * a
+
+    return proj
 
 
 def l2_norm(x):

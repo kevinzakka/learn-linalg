@@ -1,5 +1,6 @@
 import numpy as np
 
+from utils import diag, create_diag
 from utils import projection, l2_norm
 
 
@@ -31,14 +32,26 @@ class QR(object):
         M, N = self.A.shape
 
         for i in range(N):
-            
+            # select column
+            c = self.A[i:M, i:i+1]
+            print(c)
+            # grab sign of first element in c
+            s = np.sign(c[0])
+            # compute u
+            u = c + s*l2_norm(c)*basis_vec(0, M)
+            # reflect
+            self.A[i:M, i:i+1] = reflection(c, u, apply=True)
 
     def gram_schmidt(self):
         """
         Compute QR using Gram-Schmidt orthogonalization.
 
         Suffers from numerical instabilities when 2 vectors
-        are nearly orthogonal so not really used in practice.
+        are nearly orthogonal which may cause loss of
+        orthogonality between the columns of Q.
+
+        We compute a unique QR decomposition, hence we force
+        the diagonal elements of R to be positive.
         """
         M, N = self.Q.shape
 

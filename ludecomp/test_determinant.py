@@ -29,7 +29,7 @@ class DeterminantTest(unittest.TestCase):
         actual = det(T, log=True)
         expected = LA.slogdet(T)
 
-        self.assertTrue(np.allclose(a, e) for a, e in zip(actual, expected))
+        self.assertTrue(all(np.allclose(a, e) for a, e in zip(actual, expected)))
 
 
 if __name__ == '__main__':

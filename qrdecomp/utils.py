@@ -46,6 +46,7 @@ def reflection(x, u, apply=False):
         return refl
     else:
         P = np.eye(N) - 2*np.dot(v, v.T)
+
         return P
 
 
@@ -163,6 +164,34 @@ def lower_diag(A, diag=False):
             L[i, j] = A[i, j]
 
     return L
+
+
+def diag(A):
+    """
+    Grabs the diagonal elements of a square
+    matrix A.
+    """
+    N = len(A)
+    D = np.zeros([N, 1])
+
+    for i in range(N):
+        D[i] = A[i, i]
+
+    return D
+
+
+def create_diag(x):
+    """
+    Create a square matrix whose diagonal
+    elements are the elements of x.
+    """
+    N = x.shape[0]
+    D = np.zeros([N, N])
+
+    for i in range(N):
+        D[i, i] = x[i]
+
+    return D
 
 
 def unit_diag(A):

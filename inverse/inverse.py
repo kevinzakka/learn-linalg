@@ -50,4 +50,3 @@ def inverse(A):
             x[i, j] = (y[i, j] - sum) / (U[i, i])
 
     return x
-

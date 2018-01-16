@@ -1,7 +1,7 @@
 import numpy as np
 
-from utils import diag, create_diag
-from utils import projection, l2_norm
+from utils import l2_norm, basis_vec
+from utils import reflection, projection
 
 
 class QR(object):
@@ -31,16 +31,30 @@ class QR(object):
         """
         M, N = self.A.shape
 
-        for i in range(N):
+        self.Q = np.eye(N)
+
+        for i in range(N-1):
             # select column
             c = self.A[i:M, i:i+1]
-            print(c)
+
             # grab sign of first element in c
             s = np.sign(c[0])
+
             # compute u
-            u = c + s*l2_norm(c)*basis_vec(0, M)
-            # reflect
-            self.A[i:M, i:i+1] = reflection(c, u, apply=True)
+            u = c + s*l2_norm(c)*basis_vec(0, N-i)
+
+            # reflect the submatrix with respect to u
+            self.A[i:M, i:N] = reflection(
+                self.A[i:M, i:N], u, apply=True
+            )
+
+            Q = reflection(self.A[i:M, i:N], u, apply=False)
+            Q = np.pad(Q, ((i, 0), (i, 0)), mode='constant')
+            for j in range(i):
+                Q[j, j] = 1.
+            self.Q = np.dot(Q, self.Q)
+
+        return self.Q.T, self.A
 
     def gram_schmidt(self):
         """

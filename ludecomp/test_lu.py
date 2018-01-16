@@ -35,7 +35,9 @@ class LUDecompositionTest(unittest.TestCase):
         actual = LU(T, pivoting='partial').decompose()
         expected = LA.lu(T)
 
-        self.assertTrue(all(np.allclose(a, e) for a, e in zip(actual, expected)))
+        self.assertTrue(
+            all(np.allclose(a, e) for a, e in zip(actual, expected))
+        )
 
     def test_full_pivoting(self):
         T = np.array([

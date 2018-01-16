@@ -13,7 +13,7 @@ Currently reinforcing my linear algebra and numerical analysis by reimplementing
 - [benchmarks](https://github.com/kevinzakka/linalg/tree/master/benchmarks): speed comparisons of different decompositions for solving `Ax = b`.
 - [imagealign](https://github.com/kevinzakka/linalg/tree/master/imagealign): align a crooked image using least squares.
 - [qrdecomp](https://github.com/kevinzakka/linalg/tree/master/qrdecomp): QR decomposition of any matrix A using `gram-schmidt` or `householder`.
-- [lstsq](https://github.com/kevinzakka/linalg/tree/master/lstsq): solve linear least squares using QR decomposition
+- [lstsq](https://github.com/kevinzakka/linalg/tree/master/lstsq): solve least squares using QR decomposition.
 
 ## Resources
 

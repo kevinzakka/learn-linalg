@@ -6,7 +6,7 @@ def lstsq(A, b):
     """
     Solves the linear system of equations Ax = b by
     computing a vector x that minimizes the Euclidean
-    norm ||b - ax||^2.
+    norm ||b - Ax||^2.
 
     Concretely, uses the QR decomposition of A to deal
     with an over or well determined system.

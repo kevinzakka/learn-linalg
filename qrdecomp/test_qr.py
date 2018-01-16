@@ -27,10 +27,20 @@ class QRTest(unittest.TestCase):
             all(np.allclose(a, e) for a, e in zip(actual, expected))
         )
 
-    def test_householder(self):
+    def test_householder_complete(self):
         T = np.random.randn(100, 100)
 
-        actual = QR(T).householder()
+        actual = QR(T, reduce=False).householder()
+        expected = LA.qr(T)
+
+        self.assertTrue(
+            all(np.allclose(a, e) for a, e in zip(actual, expected))
+        )
+
+    def test_householder_reduce(self):
+        T = np.random.randn(100, 100)
+
+        actual = QR(T, reduce=True).householder()
         expected = LA.qr(T)
 
         self.assertTrue(

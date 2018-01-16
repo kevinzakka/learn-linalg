@@ -26,7 +26,7 @@ class LU(object):
         - 'full': iterates over the entire matrix and permutes both
           rows and columns to get the largest possible value on the
           diagonal.
-    - b: a column vector of shape (N,). Can also be multiple column
+    - b: a column vector of shape (M,). Can also be multiple column
       vectors in the case where one wishes to solve many right-hand
       sides associated with the same A. In that case, b is of shape
       (N, K).

@@ -145,7 +145,7 @@ class LU(object):
                         else:
                             Q = permute(N, [(i, pivot_col)])
                             self.A = np.dot(self.A, Q)
-                            self.Q = np.dot(self.Q, Q)
+                            self.Q = np.dot(Q, self.Q)
                             self.num_switches += 1
 
                 self.pivot = self.A[i, i]
@@ -159,7 +159,7 @@ class LU(object):
         self.P = self.P
         self.L = unit_diag(lower_diag(self.A))
         self.U = upper_diag(self.A, diag=True)
-        self.Q = self.Q
+        self.Q = self.Q.T
 
         if ret:
             if det:
@@ -205,12 +205,8 @@ class LU(object):
 
         if self.pivoting is None:
             right_hand = self.b
-        elif self.pivoting == "partial":
-            right_hand = np.dot(self.P, self.b)
         else:
             right_hand = np.dot(self.P, self.b)
-            right_hand = np.dot(right_hand[:, np.newaxis].T, self.Q)
-            right_hand = right_hand.squeeze().T
 
         for k in range(num_iters):
             for i in range(N):
@@ -246,3 +242,6 @@ class LU(object):
 
         if self.b.ndim == 1:
             self.x = self.x.squeeze()
+
+        if self.pivoting == 'full':
+            self.x = np.dot(self.Q, self.x)

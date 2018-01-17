@@ -23,6 +23,9 @@ class GaussElim(object):
       eliminate backwards such that the end result is the indentity
       matrix.
 
+    Note: This needs to be rewritten to remove explicit elimination
+    matrices.
+
     Args
     ----
     - A: a numpy array of shape (N, N).

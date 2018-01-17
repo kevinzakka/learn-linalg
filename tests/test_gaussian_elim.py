@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from gaussian_elim import GaussElim
+from gelim.gaussian_elim import GaussElim
 
 
 class GaussianElimTest(unittest.TestCase):

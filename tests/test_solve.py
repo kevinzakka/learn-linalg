@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import numpy.linalg as LA
 
-from solve import solve
+from solver.solve import solve
 
 
 class SolveTest(unittest.TestCase):

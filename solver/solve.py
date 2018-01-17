@@ -1,4 +1,4 @@
-from lu import LU
+from ludecomp.lu import LU
 
 
 def solve(A, b, pivoting='partial'):
@@ -6,7 +6,7 @@ def solve(A, b, pivoting='partial'):
     Solves the linear system of equations Ax = b
     where A is well-determined.
 
-    Concretely, uses PLU decompisition of A
+    Concretely, uses PLU decomposition of A
     followed by forward and back substitution
     to solve for x.
 

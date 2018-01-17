@@ -1,7 +1,7 @@
 import numpy as np
 
-from sum import KahanSum
-from utils import is_symmetric, upper_diag
+from kahan.sum import KahanSum
+from utils.utils import is_symmetric, upper_diag
 
 
 class Cholesky(object):

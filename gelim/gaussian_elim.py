@@ -1,6 +1,6 @@
 import numpy as np
 
-from row_ops import permute, scale, eliminate
+from gelim.row_ops import permute, scale, eliminate
 
 
 class GaussElim(object):

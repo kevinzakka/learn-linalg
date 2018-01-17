@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import numpy.linalg as LA
 
-from cholesky import Cholesky
+from cholesky.cholesky import Cholesky
 
 
 class CholeskyDecompositionTest(unittest.TestCase):

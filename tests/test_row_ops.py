@@ -1,8 +1,8 @@
 import unittest
-import row_ops
 import numpy as np
+import gelim.row_ops as row_ops
 
-from utils import multi_dot
+from utils.utils import multi_dot
 
 
 class RowOpsTest(unittest.TestCase):

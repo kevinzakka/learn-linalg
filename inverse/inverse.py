@@ -1,7 +1,7 @@
 import numpy as np
 
-from lu import LU
-from sum import KahanSum
+from ludecomp.lu import LU
+from kahan.sum import KahanSum
 
 
 def inverse(A):

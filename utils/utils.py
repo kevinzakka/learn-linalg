@@ -1,6 +1,6 @@
 import numpy as np
 
-from sum import KahanSum
+from kahan.sum import KahanSum
 from functools import reduce
 
 

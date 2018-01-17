@@ -1,8 +1,8 @@
 import numpy as np
 
-from sum import KahanSum
-from row_ops import permute
-from utils import unit_diag, lower_diag, upper_diag
+from kahan.sum import KahanSum
+from gelim.row_ops import permute
+from utils.utils import unit_diag, lower_diag, upper_diag
 
 
 class LU(object):

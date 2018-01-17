@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import numpy.linalg as LA
 
-from inverse import inverse
+from inverse.inverse import inverse
 
 
 class InverseTest(unittest.TestCase):

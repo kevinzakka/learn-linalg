@@ -1,7 +1,7 @@
 import numpy as np
 
-from lu import LU
-from utils import diagonal, multi_dot
+from ludecomp.lu import LU
+from utils.utils import diag, multi_dot
 
 
 def det(X, log=False):
@@ -47,13 +47,13 @@ def det(X, log=False):
         sign = -1.
 
     # compute determinant of U and then A
-    diag = diagonal(U)
+    diagonal = diag(U)
     if log:
         logdet = 0.
-        for d in diag:
+        for d in diagonal:
             logdet += np.log(d)
     else:
-        det_U = multi_dot(diag)
+        det_U = multi_dot(diagonal)
         det_A = sign * det_U
 
     if log:

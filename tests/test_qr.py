@@ -2,8 +2,8 @@ import unittest
 import numpy as np
 import numpy.linalg as LA
 
-from qr import QR
-from utils import diag, create_diag
+from qrdecomp.qr import QR
+from utils.utils import diag, create_diag
 
 
 class QRTest(unittest.TestCase):

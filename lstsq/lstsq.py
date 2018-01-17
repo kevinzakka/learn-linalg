@@ -1,5 +1,5 @@
-from qr import QR
-from lu import LU
+from qrdecomp.qr import QR
+from ludecomp.lu import LU
 
 
 def lstsq(A, b):

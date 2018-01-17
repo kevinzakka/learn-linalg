@@ -2,8 +2,8 @@ import unittest
 import numpy as np
 import scipy.linalg as LA
 
-from lu import LU
-from utils import multi_dot
+from ludecomp.lu import LU
+from utils.utils import multi_dot
 
 
 class LUDecompositionTest(unittest.TestCase):

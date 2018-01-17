@@ -1,6 +1,6 @@
 import numpy as np
 
-from utils import basis_vec, basis_arr
+from utils.utils import basis_vec, basis_arr
 
 
 def permute(N, idx):

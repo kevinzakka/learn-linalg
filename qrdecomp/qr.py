@@ -1,8 +1,8 @@
 import numpy as np
 
-from sum import KahanSum
-from utils import l2_norm, basis_vec
-from utils import reflection, projection
+from kahan.sum import KahanSum
+from utils.utils import l2_norm, basis_vec
+from utils.utils import reflection, projection
 
 
 class QR(object):

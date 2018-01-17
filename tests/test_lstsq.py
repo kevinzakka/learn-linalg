@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import numpy.linalg as LA
 
-from lstsq import lstsq
+from lstsq.lstsq import lstsq
 
 
 class LeastSquaresTest(unittest.TestCase):

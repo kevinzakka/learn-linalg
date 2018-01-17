@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from sum import kahan_sum
+from kahan.sum import kahan_sum
 
 
 class KahanSumTest(unittest.TestCase):

@@ -15,6 +15,22 @@ Currently reinforcing my linear algebra and numerical analysis by reimplementing
 - [qrdecomp](https://github.com/kevinzakka/linalg/tree/master/qrdecomp): QR decomposition of any matrix A using `gram-schmidt` or `householder`.
 - [lstsq](https://github.com/kevinzakka/linalg/tree/master/lstsq): solve least squares using QR decomposition.
 
+## Todo
+
+- `eigen`: implement various algorithms for finding eigepairs of matrices.
+- `svd`: singular value decomposition
+- `pinv`: find the Moore-Penrose inverse of a matrix
+- `solve`: implement a general solver for a well-determined linear system `Ax=b`
+- `multi_dot`: automatically select the fastest evaluation order of a series of dot products using dynamic programming and carry it out.
+- `wtyw`: a pdf file explaining *when to use what* in terms of factorizations for solving `Ax=b`.
+- `misc`: refactor useful functions such as:
+    - `norm`: different matrix or vector norms.
+    - `trace`: return the trace of an array.
+    - `det`: return the determinant of an array.
+    - `cond`: return the condition number of an array.
+
+Finally, if I get the chance, I'd like to reimplement basic operations such as the dot product, matrix multiplication, saxpy and calculate the number of FLOPS to get a feel for how they can be made more efficient.
+
 ## Resources
 
 - [Stanford CS 205A Notes](https://graphics.stanford.edu/courses/cs205a-13-fall/assets/notes/cs205a_notes.pdf)

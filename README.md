@@ -24,15 +24,14 @@ Currently reinforcing my linear algebra and numerical analysis by reimplementing
 - `multi_dot`: automatically select the fastest evaluation order of a series of dot products using dynamic programming and carry it out.
 - `wtyw`: a pdf file explaining *when to use what* in terms of factorizations for solving `Ax=b`.
 - `misc`: refactor useful functions such as:
-    - `norm`: different matrix or vector norms.
-    - `trace`: return the trace of an array.
-    - `det`: return the determinant of an array.
-    - `cond`: return the condition number of an array.
-
-Finally, if I get the chance, I'd like to reimplement basic operations such as the dot product, matrix multiplication, saxpy and calculate the number of FLOPS to get a feel for how they can be made more efficient.
+    - `norm`: compute different matrix or vector norms.
+    - `trace`: compute the trace of an array.
+    - `det`: compute the determinant of an array.
+    - `cond`: compute the condition number of an array.
 
 ## Resources
 
 - [Stanford CS 205A Notes](https://graphics.stanford.edu/courses/cs205a-13-fall/assets/notes/cs205a_notes.pdf)
 - [Numerical Linear Algebra](https://www.amazon.com/Numerical-Linear-Algebra-Lloyd-Trefethen/dp/0898713617)
+- [Matrix Computations](https://www.amazon.com/Computations-Hopkins-Studies-Mathematical-Sciences/dp/1421407949/)
 - [Numerical Recipes: The Art of Scientific Computing](http://numerical.recipes/)

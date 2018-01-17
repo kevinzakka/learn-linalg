@@ -23,7 +23,7 @@ Currently reinforcing my linear algebra and numerical analysis by reimplementing
 - `solve`: implement a general solver for a well-determined linear system `Ax=b`
 - `multi_dot`: automatically select the fastest evaluation order of a series of dot products using dynamic programming and carry it out.
 - `wtyw`: a pdf file explaining *when to use what* in terms of factorizations for solving `Ax=b`.
-- `misc`: refactor useful functions such as:
+- Refactor useful functions such as:
     - `norm`: compute different matrix or vector norms.
     - `trace`: compute the trace of an array.
     - `det`: compute the determinant of an array.

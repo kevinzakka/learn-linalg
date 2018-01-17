@@ -20,7 +20,7 @@ Currently reinforcing my linear algebra and numerical analysis by reimplementing
 - `eigen`: implement various algorithms for finding eigepairs of matrices.
 - `svd`: singular value decomposition
 - `pinv`: find the Moore-Penrose inverse of a matrix
-- `solve`: implement a general solver for a well-determined linear system `Ax=b`
+- `solver`: implement a modular class that does forward and backward substitution since all factorizations use it.
 - `multi_dot`: automatically select the fastest evaluation order of a series of dot products using dynamic programming and carry it out.
 - `wtyw`: a pdf file explaining *when to use what* in terms of factorizations for solving `Ax=b`.
 - Refactor useful functions such as:

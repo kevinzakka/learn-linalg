@@ -18,7 +18,7 @@ Currently reinforcing my linear algebra and numerical analysis by reimplementing
 
 ## Todo
 
-- `eigen`: implement various algorithms for finding eigepairs of matrices.
+- `eigen`: implement various algorithms for finding eigenpairs of matrices.
 - `svd`: singular value decomposition
 - `pinv`: find the Moore-Penrose inverse of a matrix
 - `solver`: implement a modular class that does forward and backward substitution since all factorizations use it.

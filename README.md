@@ -2,6 +2,8 @@
 
 Currently reinforcing my linear algebra and numerical analysis by reimplementing basic, fundamental algorithms in Python. My implementations are tested against `numpy` and `scipy` equivalents. Inspired by [Alex Nichol's Go repository](https://github.com/unixpickle/num-analysis).
 
+Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/master/notes.md) which summarize parts of Justin Solomon's [book](https://people.csail.mit.edu/jsolomon/share/book/numerical_book.pdf) as well as insights into my thought-process.
+
 ## Contents
 
 - [kahan](https://github.com/kevinzakka/linalg/tree/master/kahan): kahan summation for adding finite precision floating point numbers.
@@ -13,22 +15,8 @@ Currently reinforcing my linear algebra and numerical analysis by reimplementing
 - [benchmarks](https://github.com/kevinzakka/linalg/tree/master/benchmarks): speed comparisons of different decompositions for solving `Ax = b`.
 - [imagealign](https://github.com/kevinzakka/linalg/tree/master/imagealign): align a crooked image using least squares.
 - [qrdecomp](https://github.com/kevinzakka/linalg/tree/master/qrdecomp): QR decomposition of any matrix A using `gram-schmidt` or `householder`.
-- [solve](https://github.com/kevinzakka/linalg/tree/master/solvw): solve `Ax=b` using PLU decomposition.
+- [solve](https://github.com/kevinzakka/linalg/tree/master/solver): solve `Ax=b` using PLU decomposition.
 - [lstsq](https://github.com/kevinzakka/linalg/tree/master/lstsq): solve least squares using QR decomposition.
-
-## Todo
-
-- `eigen`: implement various algorithms for finding eigenpairs of matrices.
-- `svd`: singular value decomposition
-- `pinv`: find the Moore-Penrose inverse of a matrix
-- `solver`: implement a modular class that does forward and backward substitution since all factorizations use it.
-- `multi_dot`: automatically select the fastest evaluation order of a series of dot products using dynamic programming and carry it out.
-- `wtyw`: a pdf file explaining *when to use what* in terms of factorizations for solving `Ax=b`.
-- Refactor useful functions such as:
-    - `norm`: compute different matrix or vector norms.
-    - `trace`: compute the trace of an array.
-    - `det`: compute the determinant of an array.
-    - `cond`: compute the condition number of an array.
 
 ## Resources
 

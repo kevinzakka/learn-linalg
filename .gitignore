@@ -1,6 +1,6 @@
-imagealign/imgs/
-imagealign/dump/
-notes/
+imgs/
+dump/
+pdfs/
 .DS_Store
 
 # Byte-compiled / optimized / DLL files

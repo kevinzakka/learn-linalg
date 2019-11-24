@@ -2,25 +2,24 @@
 
 Currently reinforcing my linear algebra and numerical analysis by reimplementing basic, fundamental algorithms in Python. My implementations are tested against `numpy` and `scipy` equivalents. Inspired by [Alex Nichol's Go repository](https://github.com/unixpickle/num-analysis).
 
-Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/master/notes.md) which summarize parts of Justin Solomon's [book](https://people.csail.mit.edu/jsolomon/share/book/numerical_book.pdf) as well as insights into my thought-process.
+Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/master/linalg/notes.md) which summarize parts of Justin Solomon's [book](https://people.csail.mit.edu/jsolomon/share/book/numerical_book.pdf) as well as insights into my thought-process.
 
 ## Contents
 
-- [kahan](https://github.com/kevinzakka/linalg/tree/master/kahan): kahan summation for adding finite precision floating point numbers.
-- [gelim](https://github.com/kevinzakka/linalg/tree/master/gelim): gaussian elimination with naive, partial and full pivoting for solving `Ax = b`.
-- [ludecomp](https://github.com/kevinzakka/linalg/tree/master/ludecomp): `LU`, `PLU` and `PLUQ` decomposition for solving `Ax = b`.
-- [determinant](https://github.com/kevinzakka/linalg/blob/master/ludecomp/determinant.py): compute the determinant (or log det) of a square matrix A using PLU factorization.
-- [inverse](https://github.com/kevinzakka/linalg/tree/master/inverse): compute the inverse of a square matrix A using PLU factorization.
-- [cholesky](https://github.com/kevinzakka/linalg/tree/master/cholesky): cholesky decomposition for symmetric positive definite matrices A.
-- [benchmarks](https://github.com/kevinzakka/linalg/tree/master/benchmarks): speed comparisons of different decompositions for solving `Ax = b`.
-- [imagealign](https://github.com/kevinzakka/linalg/tree/master/imagealign): align a crooked image using least squares.
-- [qrdecomp](https://github.com/kevinzakka/linalg/tree/master/qrdecomp): QR decomposition of any matrix A using `gram-schmidt` or `householder`.
-- [solve](https://github.com/kevinzakka/linalg/tree/master/solver): solve `Ax=b` using PLU decomposition.
-- [lstsq](https://github.com/kevinzakka/linalg/tree/master/lstsq): solve least squares using QR decomposition.
+- [kahan](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/kahan): kahan summation for adding finite precision floating point numbers.
+- [gelim](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/gelim): gaussian elimination with naive, partial and full pivoting for solving `Ax = b`.
+- [ludecomp](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/ludecomp): `LU`, `PLU` and `PLUQ` decomposition for solving `Ax = b`.
+- [determinant](https://github.com/kevinzakka/learn-linalg/blob/master/linalg/ludecomp/determinant.py): compute the determinant (or log det) of a square matrix A using PLU factorization.
+- [inverse](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/inverse): compute the inverse of a square matrix A using PLU factorization.
+- [cholesky](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/cholesky): cholesky decomposition for symmetric positive definite matrices A.
+- [benchmarks](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/benchmarks): speed comparisons of different decompositions for solving `Ax = b`.
+- [imagealign](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/imagealign): align a crooked image using least squares.
+- [qrdecomp](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/qrdecomp): QR decomposition of any matrix A using `gram-schmidt` or `householder`.
+- [solve](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/solver): solve `Ax=b` using PLU decomposition.
+- [lstsq](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/lstsq): solve least squares using QR decomposition.
 
 ## Resources
 
 - [Stanford CS 205A Notes](https://graphics.stanford.edu/courses/cs205a-13-fall/assets/notes/cs205a_notes.pdf)
 - [Numerical Linear Algebra](https://www.amazon.com/Numerical-Linear-Algebra-Lloyd-Trefethen/dp/0898713617)
-- [Matrix Computations](https://www.amazon.com/Computations-Hopkins-Studies-Mathematical-Sciences/dp/1421407949/)
 - [Numerical Recipes: The Art of Scientific Computing](http://numerical.recipes/)

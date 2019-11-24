@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import numpy.linalg as LA
 
-from linalg.ludecomp import determinant
+from linalg import determinant
 
 
 class DeterminantTest(unittest.TestCase):

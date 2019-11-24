@@ -9,8 +9,8 @@ Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/ma
 - [kahan](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/kahan): kahan summation for adding finite precision floating point numbers.
 - [gelim](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/gelim): gaussian elimination with naive, partial and full pivoting for solving `Ax = b`.
 - [ludecomp](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/ludecomp): `LU`, `PLU` and `PLUQ` decomposition for solving `Ax = b`.
-- [determinant](https://github.com/kevinzakka/learn-linalg/blob/master/linalg/ludecomp/determinant.py): compute the determinant (or log det) of a square matrix A using PLU factorization.
-- [inverse](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/inverse): compute the inverse of a square matrix A using PLU factorization.
+- [determinant](https://github.com/kevinzakka/learn-linalg/blob/master/linalg/misc/determinant.py): compute the determinant (or log det) of a square matrix A using PLU factorization.
+- [inverse](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/misc/inverse.py): compute the inverse of a square matrix A using PLU factorization.
 - [cholesky](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/cholesky): cholesky decomposition for symmetric positive definite matrices A.
 - [benchmarks](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/benchmarks): speed comparisons of different decompositions for solving `Ax = b`.
 - [imagealign](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/imagealign): align a crooked image using least squares.

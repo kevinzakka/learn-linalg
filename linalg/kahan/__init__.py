@@ -1,5 +1,4 @@
-"""
-A more precise summation of floating-point numbers.
+"""A more precise summation of floating-point numbers.
 """
 
-from .sum import KahanSum, kahan_sum
+from linalg.kahan.sum import KahanSum, kahan_sum

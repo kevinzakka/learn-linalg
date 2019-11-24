@@ -4,10 +4,10 @@
 import numpy as np
 
 from linalg import utils
-from linalg.kahan.sum import KahanSum
+from linalg.kahan import KahanSum
 
 
-class QR(object):
+class QR:
     """Computes the QR decomposition of an `mxn` matrix A.
 
     The matrix A is factorized into a product of an
@@ -56,6 +56,9 @@ class QR(object):
         else:
             iters = N
 
+        # apply orthogonal triangularization, i.e. a succession
+        # of elementary unitary matrices Q on the left of A so
+        # that the resulting matrix is upper-triangular
         for i in range(iters):
             # select column
             c = self.A[i:M, i:i+1]

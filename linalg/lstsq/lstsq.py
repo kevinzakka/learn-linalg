@@ -1,8 +1,8 @@
 """A least-squares solver for systems of linear equations.
 """
 
-from qrdecomp.qr import QR
-from ludecomp.lu import LU
+from linalg.qrdecomp import QR
+from linalg.ludecomp import LU
 
 
 def lstsq(A, b):

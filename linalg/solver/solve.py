@@ -1,7 +1,7 @@
 """A solver for systems of linear equations.
 """
 
-from ludecomp.lu import LU
+from linalg.ludecomp import LU
 
 
 def solve(A, b, pivoting='partial'):

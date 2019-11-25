@@ -9,6 +9,8 @@ import numpy as np
 import numpy.linalg as LA
 
 from linalg import utils
+from linalg.solver import solve
+from linalg.eigen import single
 
 
 def power_iteration(A, max_iter=1000):
@@ -21,12 +23,34 @@ def power_iteration(A, max_iter=1000):
   return vs
 
 
+def rayleigh_quotient_iteration(A, mu, max_iter=1000):
+  v = np.random.randn(A.shape[0])
+  vs = [v.copy()]
+  for i in range(max_iter):
+    v = solve(A - mu*np.eye(A.shape[0]), v)
+    v /= utils.l2_norm(v)
+    vs.append(v.copy())
+    mu = single.rayleigh_quotient(A, v)
+  return vs
+
+
+VIZ_POWER = False
+SEED = None  # set to ensure repeatability
+NUM_ITERS = 20
+
+
 if __name__ == "__main__":
+  if SEED is not None:
+    np.random.seed(SEED)
+
   M = np.random.randn(3, 3)
   M = M.T @ M
   
-  num_iters = 10
-  eigvecs = power_iteration(M, num_iters)
+  if VIZ_POWER:
+    eigvecs = power_iteration(M, NUM_ITERS)
+  else:
+    initial_eigval = single.power_iteration(M, 50)[0]
+    eigvecs = rayleigh_quotient_iteration(M, initial_eigval, NUM_ITERS)
 
   us = [v[0] for v in eigvecs]
   vs = [v[1] for v in eigvecs]
@@ -37,7 +61,7 @@ if __name__ == "__main__":
   wf = ws[-1]
 
   def gen_vec():
-    for i in range(num_iters-1):
+    for i in range(NUM_ITERS-1):
       yield (i, us[i], vs[i], ws[i])
 
   fig = plt.figure()

@@ -17,6 +17,7 @@ Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/ma
 - [qrdecomp](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/qrdecomp): QR decomposition of any matrix A using `gram-schmidt` or `householder`.
 - [solve](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/solver): solve `Ax=b` using PLU decomposition.
 - [lstsq](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/lstsq): solve least squares using QR decomposition.
+- [eigen](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/eigen): single and multi eigenvalue finding algorithms.
 
 ## Resources
 

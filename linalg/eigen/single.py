@@ -50,7 +50,7 @@ def rayleigh_quotient_iteration(A, mu, max_iter=1000):
 
   Args:
     A: a square symmetric array of shape (N, N).
-    mu: an initial eigenvalue guess. If none, the smallest is found.
+    mu: an initial eigenvalue guess.
 
   Returns:
     e, v: eigenvalue and eigenvector.

@@ -13,8 +13,8 @@ def solve(A_or_plu_or_pluq, b, pivoting='partial'):
   and back substitution to solve for x.
 
   Args:
-    A: a numpy array of shape (N, N) or a tuple containing the LU
-      decomposition of the matrix A.
+    A: a numpy array of shape (N, N) or a tuple containing a
+      previously computed factorization.
     b: a numpy array of shape (N,).
     pivoting: 'partial' or 'full' pivoting.
 
@@ -23,6 +23,7 @@ def solve(A_or_plu_or_pluq, b, pivoting='partial'):
   """
   if isinstance(A_or_plu_or_pluq, tuple):
     solver = LU(np.eye(A_or_plu_or_pluq[0].shape[0]), pivoting=pivoting)
+
     solver.set_P(A_or_plu_or_pluq[0])
     solver.set_L(A_or_plu_or_pluq[1])
     solver.set_U(A_or_plu_or_pluq[2])
@@ -41,6 +42,6 @@ def solve(A_or_plu_or_pluq, b, pivoting='partial'):
     solver = LU(A_or_plu_or_pluq, pivoting=pivoting)
     solver.decompose()
 
-  # solve for x
   x = solver.solve(b)
+
   return x

@@ -37,7 +37,7 @@ def inverse_iteration(A, max_iter=1000):
   """
   assert utils.is_symmetric(A), "[!] Matrix must be symmetric."
   v = np.random.randn(A.shape[0])
-  PLU = LU(A.copy(), pivoting='partial').decompose()
+  PLU = LU(A, pivoting='partial').decompose()
   for i in range(max_iter):
     v = solve(PLU, v)
     v /= utils.l2_norm(v)
@@ -72,6 +72,6 @@ def rayleigh_quotient(A, x):
   """
   num = x.T @ A @ x
   denum = x.T @ x
-  if np.isclose(x.T @ x, 1.):
+  if np.isclose(denum, 1.):
     return num
   return num / denum

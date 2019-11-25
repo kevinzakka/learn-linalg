@@ -13,7 +13,7 @@ class EigenTest(unittest.TestCase):
       diff = x - y
     else:
       diff = x + y
-    return np.allclose(diff, np.zeros(3))
+    return np.allclose(diff, np.zeros_like(diff))
 
   def test_power_iteration(self):
     M = np.random.randn(3, 3)

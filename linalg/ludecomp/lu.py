@@ -168,17 +168,26 @@ class LU:
         return (self.P.T, self.L, self.U)
       return (self.P.T, self.L, self.U, self.Q.T)
 
+  def set_P(self, P):
+    self.P = P.T
+
+  def set_L(self, L):
+    self.L = L
+
+  def set_U(self, U):
+    self.U = U
+
+  def set_Q(self, Q):
+    self.Q = Q.T
+
   def solve(self, b):
     """Perform the LU factorization on the matrix A
     and then solve the linear system Ax = b using
     forward and backward substitution.
     """
     self.b = b
-
-    self.decompose(ret=False)
     self._forward()
     self._backward()
-
     return self.x
 
   def _forward(self):
@@ -189,7 +198,6 @@ class LU:
     Ly = Pb and if full pivoting is used, solves
     the system Ly = PbQ.
     """
-
     if self.b.ndim > 1:
       num_iters = self.b.shape[1]
       N = self.b.shape[0]

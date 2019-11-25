@@ -3,7 +3,9 @@
 
 import numpy as np
 
-from linalg import utils, inverse
+from linalg import utils
+from linalg.ludecomp import LU
+from linalg.solver import solve
 
 
 def power_iteration(A, max_iter=1000):
@@ -33,9 +35,9 @@ def inverse_iteration(A, max_iter=1000):
     eigvec: the smallest eigenvector of the matrix.
   """
   assert utils.is_symmetric(A), "[!] Matrix must be symmetric."
-  A_inv = inverse(A)
   v = np.random.randn(A.shape[0])
+  PLU = LU(A, pivoting='partial').decompose()
   for i in range(max_iter):
-    v = A_inv @ v
+    v = solve(PLU, v)
     v /= utils.l2_norm(v)
   return v

@@ -15,14 +15,15 @@ def power_iteration(A, max_iter=1000):
     A: a square symmetric array of shape (N, N).
 
   Returns:
-    eigvec: the largest eigenvector of the matrix.
+    e, v: eigenvalue and eigenvector.
   """
   assert utils.is_symmetric(A), "[!] Matrix must be symmetric."
   v = np.random.randn(A.shape[0])
   for i in range(max_iter):
     v = A @ v
     v /= utils.l2_norm(v)
-  return v
+  e = rayleigh_quotient(A, v)
+  return e, v
 
 
 def inverse_iteration(A, max_iter=1000):
@@ -32,15 +33,35 @@ def inverse_iteration(A, max_iter=1000):
     A: a square symmetric array of shape (N, N).
 
   Returns:
-    eigvec: the smallest eigenvector of the matrix.
+    e, v: eigenvalue and eigenvector.
   """
   assert utils.is_symmetric(A), "[!] Matrix must be symmetric."
   v = np.random.randn(A.shape[0])
-  PLU = LU(A, pivoting='partial').decompose()
+  PLU = LU(A.copy(), pivoting='partial').decompose()
   for i in range(max_iter):
     v = solve(PLU, v)
     v /= utils.l2_norm(v)
-  return v
+  e = rayleigh_quotient(A, v)
+  return e, v
+
+
+def rayleigh_quotient_iteration(A, mu, max_iter=1000):
+  """Finds an eigenvalue closest to an initial eigenvalue guess.
+
+  Args:
+    A: a square symmetric array of shape (N, N).
+    mu: an initial eigenvalue guess. If none, the smallest is found.
+
+  Returns:
+    e, v: eigenvalue and eigenvector.
+  """
+  assert utils.is_symmetric(A), "[!] Matrix must be symmetric."
+  v = np.random.randn(A.shape[0])
+  for i in range(max_iter):
+    v = solve(A - mu*np.eye(A.shape[0]), v)
+    v /= utils.l2_norm(v)
+    mu = rayleigh_quotient(A, v)
+  return mu, v
 
 
 def rayleigh_quotient(A, x):
@@ -49,6 +70,8 @@ def rayleigh_quotient(A, x):
   This is useful for determning an eigenvalue from
   an eigenvector, e.g. after using inverse iteration.
   """
-  num = A @ x @ x
-  denum = x @ x
+  num = x.T @ A @ x
+  denum = x.T @ x
+  if np.isclose(x.T@x, 1.):
+    return num
   return num / denum

@@ -1,4 +1,4 @@
-"""Single eigenvalue finding algorithms.
+"""Single eigenpair finding algorithms.
 """
 
 import numpy as np
@@ -9,7 +9,7 @@ from linalg.solver import solve
 
 
 def power_iteration(A, max_iter=1000):
-  """Finds the largest eigenvector of a symmetric matrix.
+  """Finds the largest eigenpair of a symmetric matrix.
 
   Args:
     A: a square symmetric array of shape (N, N).
@@ -27,7 +27,7 @@ def power_iteration(A, max_iter=1000):
 
 
 def inverse_iteration(A, max_iter=1000):
-  """Finds the smallest eigenvector of a symmetric matrix.
+  """Finds the smallest eigenpair of a symmetric matrix.
 
   Args:
     A: a square symmetric array of shape (N, N).
@@ -46,7 +46,7 @@ def inverse_iteration(A, max_iter=1000):
 
 
 def rayleigh_quotient_iteration(A, mu, max_iter=1000):
-  """Finds an eigenvalue closest to an initial eigenvalue guess.
+  """Finds an eigenpair closest to an initial eigenvalue guess.
 
   Args:
     A: a square symmetric array of shape (N, N).
@@ -72,6 +72,6 @@ def rayleigh_quotient(A, x):
   """
   num = x.T @ A @ x
   denum = x.T @ x
-  if np.isclose(x.T@x, 1.):
+  if np.isclose(x.T @ x, 1.):
     return num
   return num / denum

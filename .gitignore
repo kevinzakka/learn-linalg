@@ -3,6 +3,7 @@ dump/
 pdfs/
 .DS_Store
 .pytest_cache
+*.gif
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

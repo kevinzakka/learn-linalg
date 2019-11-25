@@ -41,3 +41,14 @@ def inverse_iteration(A, max_iter=1000):
     v = solve(PLU, v)
     v /= utils.l2_norm(v)
   return v
+
+
+def rayleigh_quotient(A, x):
+  """Computes the Rayleigh quotient.
+
+  This is useful for determning an eigenvalue from
+  an eigenvector, e.g. after using inverse iteration.
+  """
+  num = A @ x @ x
+  denum = x @ x
+  return num / denum

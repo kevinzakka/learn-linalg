@@ -13,13 +13,11 @@ def inverse(A):
   The system is solved using LU decomposition with
   partial pivoting.
 
-  Params
-  ------
-  - A: a numpy array of shape (N, N).
+  Args:
+    A: a numpy array of shape (N, N).
 
-  Returns
-  -------
-  - a numpy array of shape (N, N).
+  Returns:
+    A numpy array of shape (N, N).
   """
   N = A.shape[0]
 

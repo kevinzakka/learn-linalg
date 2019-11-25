@@ -85,6 +85,12 @@ def l2_norm(x):
   return np.sqrt(np.dot(x.T, x))
 
 
+def inf_norm(x):
+  """Infinity norm.
+  """
+  return np.max(np.abs(x))
+
+
 def norm(x, p):
   """Returns the p norm of a vector.
   """

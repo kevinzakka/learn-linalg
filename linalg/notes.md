@@ -443,6 +443,10 @@ x' = ||x||e_1
 
 We see that all elements in x' except the first one are eliminated to zero. This feature of the Householder transformation is the reason why it is widely used.
 
+## SVD vs Eigenvalue Decomposition
+
+Eigenvalues tend to relevant to problems involving the behavior of iterated forms of A, such as matrix powers `A^k` or exponentials `e^(tA)`, whereas singular vectors tend to be relevant to problems involving the behavior of A itself, or its inverse.
+
 ## Eigenvalue Algorithms
 
 Most algorithms in this family proceed in 2 phases: first a preliminary reduction from full to structured form, then, an iterative process for the final convergence.

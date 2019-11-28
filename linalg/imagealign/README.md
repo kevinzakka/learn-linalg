@@ -1,6 +1,6 @@
 ## imagealign
 
-In this application, I apply my recently implemented [Cholesky factorization](https://github.com/kevinzakka/linalg/tree/master/cholesky) to solve the image alignment problem.
+In this application, I apply my recently implemented [Cholesky factorization](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/cholesky) to solve the image alignment problem.
 
 Specifically, the goal is to compute the affine transformation matrix `M` that relates the crooked image coordinate system to that of the reference image.
 
@@ -35,7 +35,7 @@ To solve for M, I ask the user to select at least 6 points in A that match point
  <img src="./assets/p2.png" alt="Drawing", width=30%>
 </p>
 
-and thus, our goal is to solve the linear system of equations `Q = MP`. The problem is that we are used to solving systems of the form `Ax = b`, where `x` is the unknown. In our case, we are trying to solve the system `xA = b`. There are two ways to solve this. 
+and thus, our goal is to solve the linear system of equations `Q = MP`. The problem is that we are used to solving systems of the form `Ax = b`, where `x` is the unknown. In our case, we are trying to solve the system `xA = b`. There are two ways to solve this.
 
 We could just take the transpose on both sides but doing so would result in A not being symmetric positive definite meaning I can't apply the Cholesky factorization.
 

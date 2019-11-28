@@ -3,7 +3,7 @@ import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 
-from imutils import img2array
+from linalg.imagealign.imutils import img2array
 from matplotlib.widgets import Button
 
 
@@ -89,8 +89,7 @@ class InteractiveImage(object):
         return imgs
 
     def on_click(self, event):
-        """
-        Event handler for button_press_event.
+        """Event handler for button_press_event.
 
         Registers the mouse click coordinates for
         the original reference image, and the crooked
@@ -132,8 +131,7 @@ class InteractiveImage(object):
         self.update()
 
     def on_close(self, event):
-        """
-        Pickle dump the recorded coordinates.
+        """Pickle dump the recorded coordinates.
         """
         if not self.coords:
             plt.close()

@@ -3,9 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from linalg.cholesky import Cholesky
-from linalg.imagealign.app import InteractiveImage
-from linalg.imagealign.imutils import img2array, load_coords, homogenize
-from linalg.imagealign.interpolation import affine_grid_generator, bilinear_sampler
+
+from app import InteractiveImage
+from imutils import img2array, load_coords, homogenize
+from interpolation import affine_grid_generator, bilinear_sampler
 
 
 def main():

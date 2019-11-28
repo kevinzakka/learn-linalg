@@ -3,8 +3,9 @@ import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 
-from linalg.imagealign.imutils import img2array
 from matplotlib.widgets import Button
+
+from imutils import img2array
 
 
 class InteractiveImage(object):

@@ -12,12 +12,15 @@ Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/ma
 - [determinant](https://github.com/kevinzakka/learn-linalg/blob/master/linalg/misc/determinant.py): compute the determinant (or log det) of a square matrix A using PLU factorization.
 - [inverse](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/misc/inverse.py): compute the inverse of a square matrix A using PLU factorization.
 - [cholesky](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/cholesky): cholesky decomposition for symmetric positive definite matrices A.
-- [benchmarks](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/benchmarks): speed comparisons of different decompositions for solving `Ax = b`.
-- [imagealign](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/imagealign): align a crooked image using least squares.
 - [qrdecomp](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/qrdecomp): QR decomposition of any matrix A using `gram-schmidt` or `householder`.
 - [solve](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/solver): solve `Ax=b` using PLU decomposition.
 - [lstsq](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/lstsq): solve least squares using QR decomposition.
 - [eigen](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/eigen): single and multi eigenvalue finding algorithms.
+
+## Applications
+
+- [imagealign](examples/imagealign/): align a crooked image using least squares.
+- [benchmarks](examples/benchmarks/): speed comparisons of different decompositions for solving `Ax = b`.
 
 ## Resources
 

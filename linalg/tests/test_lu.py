@@ -35,8 +35,10 @@ class LUDecompositionTest(unittest.TestCase):
   def test_solve_single_no_pivoting(self):
     T = np.random.randn(50, 50)
     b = np.random.randn(50)
-
-    actual = LU(T).solve(b)
+    
+    lu_solver = LU(T)
+    lu_solver.decompose()
+    actual = lu_solver.solve(b)
     expected = np.linalg.solve(T, b)
 
     self.assertTrue(np.allclose(actual, expected))
@@ -44,8 +46,10 @@ class LUDecompositionTest(unittest.TestCase):
   def test_solve_multi_no_pivoting(self):
     T = np.random.randn(50, 50)
     b = np.random.randn(50, 5)
-
-    actual = LU(T).solve(b)
+    
+    lu_solver = LU(T)
+    lu_solver.decompose()
+    actual = lu_solver.solve(b)
     expected = np.linalg.solve(T, b)
 
     self.assertTrue(np.allclose(actual, expected))
@@ -53,8 +57,10 @@ class LUDecompositionTest(unittest.TestCase):
   def test_solve_multi_partial_pivoting(self):
     T = np.random.randn(50, 50)
     b = np.random.randn(50, 5)
-
-    actual = LU(T, pivoting='partial').solve(b)
+    
+    lu_solver = LU(T, pivoting='partial')
+    lu_solver.decompose()
+    actual = lu_solver.solve(b)
     expected = np.linalg.solve(T, b)
 
     self.assertTrue(np.allclose(actual, expected))
@@ -63,7 +69,9 @@ class LUDecompositionTest(unittest.TestCase):
     T = np.random.randn(50, 50)
     b = np.random.randn(50, 5)
 
-    actual = LU(T, pivoting='full').solve(b)
+    lu_solver = LU(T, pivoting='full')
+    lu_solver.decompose()
+    actual = lu_solver.solve(b)
     expected = np.linalg.solve(T, b)
 
     self.assertTrue(np.allclose(actual, expected))

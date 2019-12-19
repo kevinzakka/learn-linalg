@@ -23,6 +23,7 @@ def lstsq(A, b):
   # if well-determined, use PLU
   if (M == N):
     solver = LU(A, pivoting='partial')
+    solver.decompose()
   else:
     solver = QR(A)
 

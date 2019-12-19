@@ -1,0 +1,2 @@
+from linalg.optim.gradient_descent import GradientDescent
+from linalg.optim.conjugate_gradient import ConjugateGradient

@@ -21,6 +21,7 @@ Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/ma
 
 - [imagealign](examples/imagealign/): align a crooked image using least squares.
 - [benchmarks](examples/benchmarks/): speed comparisons of different decompositions for solving `Ax = b`.
+- [deblurify](examples/deblurify/):
 
 ## Resources
 

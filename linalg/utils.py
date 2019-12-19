@@ -229,3 +229,14 @@ def basis_arr(ks, n):
   for i, k in enumerate(ks):
     b[i, k] = 1
   return b
+
+
+def random_spd(n):
+  """Creates a random, symmetric, positive-definite matrix.
+
+  Reference: https://math.stackexchange.com/a/358092/235367
+  """
+  A = np.random.rand(n, n)
+  A = 0.5 * (A + A.T)
+  A = A + n*np.eye(n)
+  return A

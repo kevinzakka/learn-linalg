@@ -3,13 +3,11 @@
 
 import numpy as np
 
-_EPS = 5*np.finfo(float).eps
-
 
 class GradientDescent:
   """A gradient descent solver.
   """
-  def __init__(self, max_iters, tol=_EPS):
+  def __init__(self, max_iters, tol=5*np.finfo(float).eps):
     """Constructor.
 
     Args:

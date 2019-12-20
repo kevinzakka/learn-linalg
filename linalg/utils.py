@@ -240,3 +240,12 @@ def random_spd(n):
   A = 0.5 * (A + A.T)
   A = A + n*np.eye(n)
   return A
+
+
+def random_symmetric(n):
+  """Creates a random, symmetric matrix.
+  """
+  A = np.random.randn(n, n)
+  A = 0.5 * (A + A.T)
+  # A = A.T @ A
+  return A

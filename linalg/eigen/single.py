@@ -15,7 +15,7 @@ def power_iteration(A, max_iter=1000):
     A: a square symmetric array of shape (N, N).
 
   Returns:
-    e, v: eigenvalue and eigenvector.
+    e, v: eigenvalue and right eigenvector.
   """
   assert utils.is_symmetric(A), "[!] Matrix must be symmetric."
   v = np.random.randn(A.shape[0])
@@ -33,7 +33,7 @@ def inverse_iteration(A, max_iter=1000):
     A: a square symmetric array of shape (N, N).
 
   Returns:
-    e, v: eigenvalue and eigenvector.
+    e, v: eigenvalue and right eigenvector.
   """
   assert utils.is_symmetric(A), "[!] Matrix must be symmetric."
   v = np.random.randn(A.shape[0])
@@ -53,7 +53,7 @@ def rayleigh_quotient_iteration(A, mu, max_iter=1000):
     mu: an initial eigenvalue guess.
 
   Returns:
-    e, v: eigenvalue and eigenvector.
+    e, v: eigenvalue and right eigenvector.
   """
   assert utils.is_symmetric(A), "[!] Matrix must be symmetric."
   v = np.random.randn(A.shape[0])

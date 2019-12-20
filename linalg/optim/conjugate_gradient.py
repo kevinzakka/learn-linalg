@@ -3,8 +3,6 @@
 
 import numpy as np
 
-_EPS = 5*np.finfo(float).eps
-
 
 class ConjugateGradient:
   """A conjugate gradient solver.

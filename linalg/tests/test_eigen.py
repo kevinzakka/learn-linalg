@@ -3,6 +3,7 @@ import numpy as np
 import numpy.linalg as LA
 
 from linalg.eigen import single
+from linalg.utils import random_symmetric
 
 
 class EigenTest(unittest.TestCase):
@@ -15,32 +16,30 @@ class EigenTest(unittest.TestCase):
       diff = x + y
     return np.allclose(diff, np.zeros_like(diff))
 
-  def test_power_iteration(self):
-    M = np.random.randn(3, 3)
-    M = M.T @ M
-
+  def np_eig(self, M, largest=True):
     eigvals, eigvecs = LA.eig(M)
-    idx = eigvals.argsort()[::-1]
+    # sort by largest absolute eigenvalue
+    idx = np.abs(eigvals).argsort()[::-1]
     eigvecs = eigvecs[:, idx]
     eigvals = eigvals[idx]
-    expected_eigvec = eigvecs[:, 0]
-    expected_eigval = eigvals[0]
+    if largest:
+      return eigvals[0], eigvecs[:, 0]
+    return eigvals[-1], eigvecs[:, -1]
 
-    actual_eigval, actual_eigvec = single.power_iteration(M, 10000)
+  def test_power_iteration(self):
+    M = random_symmetric(3)
+
+    expected_eigval, expected_eigvec = self.np_eig(M)
+
+    actual_eigval, actual_eigvec = single.power_iteration(M, 1000)
 
     self.assertTrue(self.same_eigvec(actual_eigvec, expected_eigvec))
     self.assertTrue(np.isclose(actual_eigval, expected_eigval))
 
   def test_inverse_iteration(self):
-    M = np.random.randn(3, 3)
-    M = M.T @ M
+    M = random_symmetric(3)
 
-    eigvals, eigvecs = LA.eig(M)
-    idx = eigvals.argsort()[::-1]
-    eigvecs = eigvecs[:, idx]
-    eigvals = eigvals[idx]
-    expected_eigvec = eigvecs[:, -1]
-    expected_eigval = eigvals[-1]
+    expected_eigval, expected_eigvec = self.np_eig(M, largest=False)
 
     actual_eigval, actual_eigvec = single.inverse_iteration(M, 10000)
 
@@ -48,15 +47,9 @@ class EigenTest(unittest.TestCase):
     self.assertTrue(np.isclose(actual_eigval, expected_eigval))
 
   def test_rayleigh_largest(self):
-    M = np.random.randn(3, 3)
-    M = M.T @ M
+    M = random_symmetric(3)
 
-    eigvals, eigvecs = LA.eig(M)
-    idx = eigvals.argsort()[::-1]
-    eigvecs = eigvecs[:, idx]
-    eigvals = eigvals[idx]
-    expected_eigvec = eigvecs[:, 0]
-    expected_eigval = eigvals[0]
+    expected_eigval, expected_eigvec = self.np_eig(M)
 
     initial_eigval = single.power_iteration(M, 50)[0]
     actual_eigval, actual_eigvec = single.rayleigh_quotient_iteration(M, initial_eigval)
@@ -65,15 +58,9 @@ class EigenTest(unittest.TestCase):
     self.assertTrue(np.isclose(actual_eigval, expected_eigval))
 
   def test_rayleigh_smallest(self):
-    M = np.random.randn(3, 3)
-    M = M.T @ M
+    M = random_symmetric(3)
 
-    eigvals, eigvecs = LA.eig(M)
-    idx = eigvals.argsort()[::-1]
-    eigvecs = eigvecs[:, idx]
-    eigvals = eigvals[idx]
-    expected_eigvec = eigvecs[:, -1]
-    expected_eigval = eigvals[-1]
+    expected_eigval, expected_eigvec = self.np_eig(M, largest=False)
 
     initial_eigval = single.inverse_iteration(M, 50)[0]
     actual_eigval, actual_eigvec = single.rayleigh_quotient_iteration(M, initial_eigval)

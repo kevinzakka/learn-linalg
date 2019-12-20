@@ -22,7 +22,7 @@ class DeterminantTest(unittest.TestCase):
     self.assertTrue(np.allclose(actual, expected))
 
   def test_log(self):
-    T = np.eye(250) * 0.1
+    T = np.eye(100) * 0.1
 
     actual = determinant(T, log=True)
     expected = LA.slogdet(T)

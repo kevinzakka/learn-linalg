@@ -1,11 +1,11 @@
-"""A gradient descent algorithm for solving Ax = b.
+"""A gradient descent algorithm for solving sparse, SPD systems Ax = b.
 """
 
 import numpy as np
 
 
 class GradientDescent:
-  """A gradient descent solver.
+  """A gradient descent solver, a.k.a. steepest descent.
   """
   def __init__(self, max_iters, tol=5*np.finfo(float).eps):
     """Constructor.
@@ -30,3 +30,6 @@ class GradientDescent:
         break
       x = x_new
     return x
+
+
+SteepestDescent = GradientDescent

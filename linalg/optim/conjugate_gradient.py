@@ -1,4 +1,4 @@
-"""A conjugate gradient algorithm for solving Ax = b.
+"""A conjugate gradient algorithm for solving sparse, SPD systems Ax = b.
 """
 
 import numpy as np

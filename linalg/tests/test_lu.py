@@ -10,7 +10,7 @@ class LUDecompositionTest(unittest.TestCase):
   """Tests LU decomposition with various pivoting strategies.
   """
   def test_no_pivoting(self):
-    T = np.random.randn(50, 50)
+    T = np.random.randn(3, 3)
 
     L_a, U_a = LU(T).decompose()
     actual = np.dot(L_a, U_a)
@@ -35,7 +35,7 @@ class LUDecompositionTest(unittest.TestCase):
   def test_solve_single_no_pivoting(self):
     T = np.random.randn(50, 50)
     b = np.random.randn(50)
-    
+
     lu_solver = LU(T)
     lu_solver.decompose()
     actual = lu_solver.solve(b)
@@ -46,7 +46,7 @@ class LUDecompositionTest(unittest.TestCase):
   def test_solve_multi_no_pivoting(self):
     T = np.random.randn(50, 50)
     b = np.random.randn(50, 5)
-    
+
     lu_solver = LU(T)
     lu_solver.decompose()
     actual = lu_solver.solve(b)
@@ -57,7 +57,7 @@ class LUDecompositionTest(unittest.TestCase):
   def test_solve_multi_partial_pivoting(self):
     T = np.random.randn(50, 50)
     b = np.random.randn(50, 5)
-    
+
     lu_solver = LU(T, pivoting='partial')
     lu_solver.decompose()
     actual = lu_solver.solve(b)

@@ -2,7 +2,7 @@ import numpy as np
 
 from linalg.kahan import KahanSum
 from linalg.gelim.row_ops import permute
-from linalg.utils import unit_diag, lower_diag, upper_diag
+from linalg.utils import unit_diag, lower_diag, upper_diag, diag
 
 
 class LU:
@@ -226,7 +226,6 @@ class LU:
     """Solve the upper triangular system Ux = y
     for x by back substitution.
     """
-
     if self.b.ndim > 1:
       num_iters = self.b.shape[1]
       N = self.b.shape[0]
@@ -241,7 +240,7 @@ class LU:
         acc = KahanSum()
         for j in range(N-1, i, -1):
           acc.add(self.U[i, j]*self.x[j, k])
-        self.x[i, k] = (self.y[i, k] - acc.cur_sum()) / (self.U[i, i])
+        self.x[i, k] = (self.y[i, k] - acc.cur_sum()) / (self.U[i, i] + 1e-10)  # prevent division by 0
 
     if self.b.ndim == 1:
       self.x = self.x.squeeze()

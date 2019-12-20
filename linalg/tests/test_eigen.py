@@ -2,19 +2,15 @@ import unittest
 import numpy as np
 import numpy.linalg as LA
 
-from linalg.eigen import single
+from linalg.eigen import single, multi
 from linalg.utils import random_symmetric
 
 
 class EigenTest(unittest.TestCase):
   """Tests eigenvalue finding algorithms.
   """
-  def same_eigvec(self, x, y):
-    if np.sign(x[0]) == np.sign(y[0]):
-      diff = x - y
-    else:
-      diff = x + y
-    return np.allclose(diff, np.zeros_like(diff))
+  def absallclose(self, x, y, rtol=1e-5):
+    return np.allclose(np.abs(x), np.abs(y), rtol=rtol)
 
   def np_eig(self, M, largest=True):
     eigvals, eigvecs = LA.eig(M)
@@ -33,8 +29,8 @@ class EigenTest(unittest.TestCase):
 
     actual_eigval, actual_eigvec = single.power_iteration(M, 1000)
 
-    self.assertTrue(self.same_eigvec(actual_eigvec, expected_eigvec))
-    self.assertTrue(np.isclose(actual_eigval, expected_eigval))
+    self.assertTrue(self.absallclose(actual_eigvec, expected_eigvec))
+    self.assertTrue(self.absallclose(actual_eigval, expected_eigval))
 
   def test_inverse_iteration(self):
     M = random_symmetric(3)
@@ -43,8 +39,8 @@ class EigenTest(unittest.TestCase):
 
     actual_eigval, actual_eigvec = single.inverse_iteration(M, 10000)
 
-    self.assertTrue(self.same_eigvec(actual_eigvec, expected_eigvec))
-    self.assertTrue(np.isclose(actual_eigval, expected_eigval))
+    self.assertTrue(self.absallclose(actual_eigvec, expected_eigvec))
+    self.assertTrue(self.absallclose(actual_eigval, expected_eigval))
 
   def test_rayleigh_largest(self):
     M = random_symmetric(3)
@@ -54,8 +50,8 @@ class EigenTest(unittest.TestCase):
     initial_eigval = single.power_iteration(M, 50)[0]
     actual_eigval, actual_eigvec = single.rayleigh_quotient_iteration(M, initial_eigval)
 
-    self.assertTrue(self.same_eigvec(actual_eigvec, expected_eigvec))
-    self.assertTrue(np.isclose(actual_eigval, expected_eigval))
+    self.assertTrue(self.absallclose(actual_eigvec, expected_eigvec))
+    self.assertTrue(self.absallclose(actual_eigval, expected_eigval))
 
   def test_rayleigh_smallest(self):
     M = random_symmetric(3)
@@ -65,8 +61,21 @@ class EigenTest(unittest.TestCase):
     initial_eigval = single.inverse_iteration(M, 50)[0]
     actual_eigval, actual_eigvec = single.rayleigh_quotient_iteration(M, initial_eigval)
 
-    self.assertTrue(self.same_eigvec(actual_eigvec, expected_eigvec))
-    self.assertTrue(np.isclose(actual_eigval, expected_eigval))
+    self.assertTrue(self.absallclose(actual_eigvec, expected_eigvec))
+    self.assertTrue(self.absallclose(actual_eigval, expected_eigval))
+
+  def test_projected_iteration(self):
+    M = random_symmetric(3)
+
+    eigvals, eigvecs = LA.eig(M)
+    idx = np.abs(eigvals).argsort()[::-1]
+    expected_eigvecs = eigvecs[:, idx]
+    expected_eigvals = eigvals[idx]
+
+    actual_eigvals, actual_eigvecs = multi.projected_iteration(M, 3)
+
+    self.assertTrue(self.absallclose(actual_eigvecs, expected_eigvecs))
+    self.assertTrue(self.absallclose(actual_eigvals, expected_eigvals))
 
 
 if __name__ == '__main__':

@@ -71,7 +71,7 @@ def projection(b, a, norm=False):
   - proj: a numpy array of shape (N, 1).
   """
   if norm:
-    proj = np.dot(np.dot(a, a.T), b)
+    proj = np.dot(np.dot(a.T, b), a)
   else:
     c = np.dot(a.T, b) / np.dot(a.T, a)
     proj = c * a
@@ -116,18 +116,6 @@ def herm(A):
   Equivalent to the H operator `A.H`.
   """
   return A.T.conj()
-
-
-def is_hermitian(A):
-  """Returns True if A is hermitian.
-  """
-  return np.allclose(A, A.T.conj())
-
-
-def is_symmetric(A):
-  """Returns True if A is symmetric.
-  """
-  return np.allclose(A, A.T)
 
 
 def upper_diag(A, diag=False):
@@ -246,6 +234,22 @@ def random_symmetric(n):
   """Creates a random, symmetric matrix.
   """
   A = np.random.randn(n, n)
+  # alternatively, we could have done
+  # A = A.T @ A but addition is cheaper
+  # than matrix multiplication
   A = 0.5 * (A + A.T)
-  # A = A.T @ A
   return A
+
+
+def is_symmetric(A):
+  """Returns True if A is symmetric.
+  """
+  return np.allclose(A, A.T)
+is_symm = is_symmetric
+
+
+def is_spd(A):
+  """Returns True if A is symmetric positive definite.
+  """
+  raise NotImplementedError
+  # symm_cond = is_symmetric(A)

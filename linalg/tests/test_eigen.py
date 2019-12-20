@@ -74,6 +74,9 @@ class EigenTest(unittest.TestCase):
 
     actual_eigvals, actual_eigvecs = multi.projected_iteration(M, 3)
 
+    print(actual_eigvecs)
+    print(expected_eigvecs)
+
     self.assertTrue(self.absallclose(actual_eigvecs, expected_eigvecs))
     self.assertTrue(self.absallclose(actual_eigvals, expected_eigvals))
 

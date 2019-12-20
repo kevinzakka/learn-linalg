@@ -28,13 +28,12 @@ def projected_iteration(A, k, max_iter=1000, sort=True):
   eigvecs = np.zeros((A.shape[0], k))
   eigvals = np.zeros(A.shape[0])
   for i in range(k):
-
     v = np.random.randn(A.shape[0])
-    for _ in range(max_iter):
+    for poop in range(max_iter):
       # project out computed eigenvectors
       proj_sum = np.zeros_like(v)
-      for j in range(i+1):
-        proj_sum += utils.projection(v, eigvecs[:, j], norm=True)
+      for j in range(i):
+        proj_sum += utils.projection(v, eigvecs[:, j])
       v -= proj_sum
 
       v = A @ v
@@ -56,3 +55,10 @@ def projected_iteration(A, k, max_iter=1000, sort=True):
 
 def qr_algorithm(A):
   raise NotImplementedError
+
+
+def eig(A, sort=True):
+  """Compute the eigenvalues and right eigenvectors of a symmetric matrix.
+  """
+  eigvals, eigvecs = projected_iteration(A, len(A), sort=sort)
+  return eigvals, eigvecs

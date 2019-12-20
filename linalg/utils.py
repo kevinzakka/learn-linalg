@@ -37,7 +37,7 @@ def reflection(x, u, apply=False):
 
   if apply:
     # compute projection of x onto v
-    proj = projection(x, v, norm=True)
+    proj = proj = np.dot(np.dot(v, v.T), x)
 
     # and finally reflect
     refl = x - 2*proj
@@ -49,7 +49,7 @@ def reflection(x, u, apply=False):
     return P
 
 
-def projection(b, a, norm=False):
+def projection(b, a):
   """The projection of b onto a is the orthogonal
   projection of b onto a straight line parallel to a.
 
@@ -63,19 +63,17 @@ def projection(b, a, norm=False):
   ------
   - b: a numpy array of shape (N, 1).
   - a: a numpy array of shape (N, 1).
-  - norm: bool indicating whether a is normalized
-    or not.
 
   Returns
   -------
   - proj: a numpy array of shape (N, 1).
   """
-  if norm:
+  if np.isclose(a @ a, 1.):
+    proj = (a.T @ b) * a
     proj = np.dot(np.dot(a.T, b), a)
   else:
-    c = np.dot(a.T, b) / np.dot(a.T, a)
+    c = (a @ b) / (a @ a)
     proj = c * a
-
   return proj
 
 
@@ -246,10 +244,3 @@ def is_symmetric(A):
   """
   return np.allclose(A, A.T)
 is_symm = is_symmetric
-
-
-def is_spd(A):
-  """Returns True if A is symmetric positive definite.
-  """
-  raise NotImplementedError
-  # symm_cond = is_symmetric(A)

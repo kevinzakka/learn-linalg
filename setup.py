@@ -1,6 +1,5 @@
 from setuptools import setup
 
-
 setup(
   name="linalg",
   version="0.0.1",

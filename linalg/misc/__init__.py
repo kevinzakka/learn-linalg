@@ -1,2 +1,2 @@
 from linalg.misc.inverse import inverse
-from linalg.misc.determinant import determinant
+from linalg.misc.determinant import determinant, determinant_abs

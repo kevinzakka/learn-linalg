@@ -30,9 +30,7 @@ Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/ma
 
 ## Todos
 
-- Implement QR decomposition more efficiently.
 - Implement QR algorithm with Wilkinson shifts.
 - Implement SVD.
-- Implement determinant version with QR decomposition and compare timing with LU.
 - Implement conjugate gradient.
 - Make a deblurify application using conjugate gradient.

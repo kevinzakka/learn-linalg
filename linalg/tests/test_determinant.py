@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import numpy.linalg as LA
 
-from linalg import determinant
+from linalg import determinant, determinant_abs
 
 
 class DeterminantTest(unittest.TestCase):
@@ -28,6 +28,19 @@ class DeterminantTest(unittest.TestCase):
     expected = LA.slogdet(T)
 
     self.assertTrue(all(np.allclose(a, e) for a, e in zip(actual, expected)))
+
+  def test_det_abs(self):
+    T = np.array([
+      [2, 1, 1, 0],
+      [4, 3, 3, 1],
+      [8, 7, 9, 5],
+      [6, 7, 9, 8]
+    ])
+
+    actual = np.abs(determinant_abs(T))
+    expected = np.abs(LA.det(T))
+
+    self.assertTrue(np.allclose(actual, expected))
 
 
 if __name__ == '__main__':

@@ -1,6 +1,7 @@
 import numpy as np
 
 from linalg.ludecomp import LU
+from linalg.qrdecomp import QR
 from linalg.utils import diag, multi_dot
 
 
@@ -58,3 +59,13 @@ def determinant(X, log=False):
   if log:
     return sign, logdet
   return det_A
+
+
+def determinant_abs(X):
+  """Computes the absolute value of the determinant of a square matrix A.
+  """
+  Q, R = QR(X, reduce=True).householder()
+  det = 1
+  for i in range(len(R)):
+    det *= R[i, i]
+  return det

@@ -5,29 +5,28 @@ from functools import reduce
 
 
 def reflection(x, u, apply=False):
-  """A reflection is a linear transformation
-  which reflects a vector x with respect to
-  a hyperplane through the origin represented
-  by its normal vector v of unit length.
+  """Reflect the vector x over the vector u.
 
-  Concretely, the reflection can be considered
-  a linear transformation represented by a matrix
-  P, i.e. `x' = Px`.
+  A reflection is a linear transformation
+  which reflects a vector x through the origin
+  of a hyperplane represented by its normal vector
+  v of unit length.
 
-  Params
-  ------
-  - x: A numpy array of shape (N, 1). The column
-    vector to reflect.
-  - u: A numpy array of shape (N, 1). The unnormalized
-    vector normal to the hyperplane.
-  - apply: bool indicating whether to apply the reflecton
-    directly and obtain x' or return the matrix P if set
-    to `False`.
+  The reflection can be viewed as a linear transformation
+  represented by a matrix P, i.e. `x = Px`.
 
-  Returns
-  -------
-  - refl: a numpy array of shape (N, 1) if apply is `True`.
-  - P: a numpy array of shape (N, N) if apply is `False`.
+  Args:
+    x: A numpy array of shape (N, 1). The column
+      vector to reflect.
+    u: A numpy array of shape (N, 1). The unnormalized
+      vector normal to the hyperplane.
+    apply: bool indicating whether to apply the reflection
+      directly and obtain x' or return the matrix P if set
+      to `False`.
+
+  Returns:
+    refl: a numpy array of shape (N, 1) if apply is `True`.
+    P: a numpy array of shape (N, N) if apply is `False`.
   """
   # grab dimension of column vector
   N = x.shape[0]
@@ -37,7 +36,7 @@ def reflection(x, u, apply=False):
 
   if apply:
     # compute projection of x onto v
-    proj = proj = np.dot(np.dot(v, v.T), x)
+    proj = np.dot(np.dot(v, v.T), x)
 
     # and finally reflect
     refl = x - 2*proj
@@ -50,31 +49,41 @@ def reflection(x, u, apply=False):
 
 
 def projection(b, a):
-  """The projection of b onto a is the orthogonal
-  projection of b onto a straight line parallel to a.
+  """Compute the projection of b onto a.
 
+  The projection of b onto a is the orthogonal
+  projection of b onto a straight line parallel to a.
   The projection is parallel to a, i.e. it is the product
   of a constant called the scalar projection with a unit
   vector in the direction of a:
 
-  `proj(b, a) = (c)a = (a.Tb/a.Ta)a`
+  `proj(b, a) = c * a = [(a.T b) /(a.T a)] * a`
 
-  Params
-  ------
-  - b: a numpy array of shape (N, 1).
-  - a: a numpy array of shape (N, 1).
+  Args:
+    b: a numpy array of shape (N, 1).
+    a: a numpy array of shape (N, 1).
 
-  Returns
-  -------
-  - proj: a numpy array of shape (N, 1).
+  Returns:
+    proj: a numpy array of shape (N, 1).
   """
-  if np.isclose(a @ a, 1.):
-    proj = (a.T @ b) * a
-    proj = np.dot(np.dot(a.T, b), a)
-  else:
-    c = (a @ b) / (a @ a)
-    proj = c * a
-  return proj
+  norm_sq = a @ a
+  if np.isclose(norm_sq, 1.):
+    return (a.T @ b) * a
+  c = (a @ b) / norm_sq
+  return c * a
+
+
+def normalize(x, inplace=False):
+  """Normalize an input vector x.
+  """
+  norm_sq = x @ x
+  if not np.isclose(norm_sq, 1.):
+    norm = np.sqrt(norm_sq)
+    if np.isclose(norm, 0):
+      raise ZeroDivisionError("[!] Norm is very close to 0.")
+    if inplace:
+      x /= norm
+    return x / norm
 
 
 def l2_norm(x):
@@ -106,6 +115,14 @@ def norm(x, p):
     summer.add(np.power(np.abs(v[i]), p))
 
   return np.power(summer.cur_sum(), 1./p)
+
+
+def sign(x):
+  """Returns the sign of the variable x.
+  """
+  if x + 0 < 0:
+    return -1
+  return 1
 
 
 def herm(A):

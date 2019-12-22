@@ -21,10 +21,18 @@ Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/ma
 
 - [imagealign](examples/imagealign/): align a crooked image using least squares.
 - [benchmarks](examples/benchmarks/): speed comparisons of different decompositions for solving `Ax = b`.
-- [deblurify](examples/deblurify/):
 
 ## Resources
 
 - [Stanford CS 205A Notes](https://graphics.stanford.edu/courses/cs205a-13-fall/assets/notes/cs205a_notes.pdf)
 - [Numerical Linear Algebra](https://www.amazon.com/Numerical-Linear-Algebra-Lloyd-Trefethen/dp/0898713617)
 - [Numerical Recipes: The Art of Scientific Computing](http://numerical.recipes/)
+
+## Todos
+
+- Implement QR decomposition more efficiently.
+- Implement QR algorithm with Wilkinson shifts.
+- Implement SVD.
+- Implement determinant version with QR decomposition and compare timing with LU.
+- Implement conjugate gradient.
+- Make a deblurify application using conjugate gradient.

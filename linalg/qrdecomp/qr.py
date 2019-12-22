@@ -8,13 +8,13 @@ from linalg.kahan import KahanSum
 
 
 class QR:
-  """Computes the QR decomposition of an `mxn` matrix A.
+  """Computes the QR decomposition of an `m x n` matrix A.
 
   The matrix A is factorized into a product of an
   orthogonal matrix Q and an upper-triangular matrix R.
 
   QR decomposition is widely used for solving the linear
-  least squares problem `Ax=b` when A is overdetermined
+  least squares problem `Ax = b` when A is overdetermined
   (m > n).
 
   Args:
@@ -44,8 +44,37 @@ class QR:
     Q, R = self.householder()
     return Q, R
 
+  def gram_schmidt(self):
+    """Computes QR using the Gram-Schmidt method.
+
+    Suffers from numerical instabilities when 2 vectors
+    are nearly orthogonal which may cause loss of
+    orthogonality between the columns of Q.
+
+    Since we compute a unique QR decomposition, we force
+    the diagonal elements of R to be positive.
+    """
+    self.A = np.array(self.backup)
+    M, N = self.A.shape
+    self.R = np.array(self.A)
+
+    # for each col
+    for i in range(N):
+      # for each column on the left of current col
+      for j in range(i):
+        # subtract out the projection of the i'th col onto the j'th one
+        self.A[:, i] -= utils.projection(self.A[:, i], self.A[:, j])
+      # normalize
+      utils.normalize(self.A[:, i], inplace=True)
+
+    # Q is now A, R = (Q.T)(A)
+    self.Q = self.A
+    self.R = np.dot(self.Q.T, self.R)
+
+    return self.Q, self.R
+
   def householder(self, ret=True):
-    """Computes QR using Householder triangularization.
+    """Computes QR using the Householder method.
     """
     self.A = np.array(self.backup)
     M, N = self.A.shape
@@ -64,7 +93,7 @@ class QR:
       c = self.A[i:M, i:i+1]
 
       # grab sign of first element in c
-      s = np.sign(c[0])
+      s = utils.sign(c[0])
 
       # compute u
       u = c + s*utils.l2_norm(c)*utils.basis_vec(0, M-i)
@@ -88,36 +117,6 @@ class QR:
 
     if ret:
       return self.Q, self.R
-
-  def gram_schmidt(self):
-    """Computes QR using Gram-Schmidt orthogonalization.
-
-    Suffers from numerical instabilities when 2 vectors
-    are nearly orthogonal which may cause loss of
-    orthogonality between the columns of Q.
-
-    We compute a unique QR decomposition, hence we force
-    the diagonal elements of R to be positive.
-    """
-    self.A = np.array(self.backup)
-    M, N = self.A.shape
-    self.R = np.array(self.A)
-
-    # for each column
-    for i in range(N):
-      # for each column on the left of current
-      for j in range(i):
-        # calculate utils.projection of ith col on jth col
-        p = utils.projection(self.A[:, i], self.A[:, j])
-        self.A[:, i] -= p
-      # normalize ith column
-      self.A[:, i] /= utils.l2_norm(self.A[:, i])
-
-    # Q is now A, R = (Q.T)(A)
-    self.Q = self.A
-    self.R = np.dot(self.Q.T, self.R)
-
-    return self.Q, self.R
 
   def solve(self, b):
     """Solves the lineary system Ax = b.

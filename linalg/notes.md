@@ -36,10 +36,10 @@ We can solve Ax = b using:
 - Cholesky decomposition
 - SVD
 
-Why is LU used rather than QR to solves square systems of equations?
+Why is LU used rather than QR to solve square systems of equations?
 
-LU: 2/3 m^3
-QR: 4/3 m^3
+* LU: `2/3 m^3` ops
+* QR: `4/3 m^3` ops
 
 The factor of 2 is a reason. Also, historically, LU and the process of elimination have been known for centuries whilst QR is relatively recent. There is not enough of a compelling advantage for QR to supplant GE (according to Bau and David).
 

@@ -13,9 +13,9 @@ class QRTest(unittest.TestCase):
     T = np.random.randn(100, 60)
 
     actual = QR(T).gram_schmidt()
-    Q, R = LA.qr(T)
 
     # enforce uniqueness for numpy version
+    Q, R = LA.qr(T)
     D = create_diag(np.sign(diag(R)))
     Q = np.dot(Q, D)
     R = np.dot(D, R)

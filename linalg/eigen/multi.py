@@ -5,6 +5,7 @@ import numpy as np
 
 from linalg import utils
 from linalg.eigen.single import rayleigh_quotient
+from linalg.qrdecomp import QR
 
 
 def projected_iteration(A, k, max_iter=1000, sort=True):
@@ -54,11 +55,22 @@ def projected_iteration(A, k, max_iter=1000, sort=True):
 
 
 def qr_algorithm(A):
-  raise NotImplementedError
+  """The de-facto algorithm for finding all eigenpairs of a symmetric matrix.
+
+  Args:
+    A: a square symmetric array of shape (N, N).
+
+  Returns:
+    e, v: eigenvalues and eigenvectors. The eigenvectors are
+      stacked column-wise.
+  """
+  assert utils.is_symmetric(A), "[!] Matrix must be symmetric."
+  pass
 
 
 def eig(A, sort=True):
   """Compute the eigenvalues and right eigenvectors of a symmetric matrix.
   """
+  # TODO switch to qr when implemented
   eigvals, eigvecs = projected_iteration(A, len(A), sort=sort)
   return eigvals, eigvecs

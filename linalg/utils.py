@@ -31,7 +31,7 @@ def reflection(x, u, apply=False):
   # grab dimension of column vector
   N = x.shape[0]
 
-  # then normalize u
+  # normalize u
   v = u / l2_norm(u)
 
   if apply:

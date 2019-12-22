@@ -23,6 +23,20 @@ class QRTest(unittest.TestCase):
 
     self.assertTrue(all(np.allclose(a, e) for a, e in zip(actual, expected)))
 
+  def test_gram_schmidt_modified(self):
+    T = np.random.randn(100, 60)
+
+    actual = QR(T).gram_schmidt_modified()
+
+    # enforce uniqueness for numpy version
+    Q, R = LA.qr(T)
+    D = create_diag(np.sign(diag(R)))
+    Q = np.dot(Q, D)
+    R = np.dot(D, R)
+    expected = (Q, R)
+
+    self.assertTrue(all(np.allclose(a, e) for a, e in zip(actual, expected)))
+
   def test_householder_complete(self):
     T = np.random.randn(100, 60)
 

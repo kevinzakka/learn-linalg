@@ -58,8 +58,10 @@ class QR:
     M, N = self.A.shape
     self.R = np.array(self.A)
 
+    self.A[:, 0] /= utils.l2_norm(self.A[:, 0])
+
     # for each col
-    for i in range(N):
+    for i in range(1, N):
       # for each column on the left of current col
       for j in range(i):
         # subtract out the projection of the i'th col onto the j'th one
@@ -71,6 +73,20 @@ class QR:
     self.Q = self.A
     self.R = np.dot(self.Q.T, self.R)
 
+    return self.Q, self.R
+
+  def gram_schmidt_modified(self):
+    """Computes QR using the modified Gram-Schmidt method.
+    """
+    self.A = np.array(self.backup)
+    M, N = self.A.shape
+    self.R = np.array(self.A)
+    for i in range(N):
+      self.A[:, i] /= utils.l2_norm(self.A[:, i])
+      for j in range(i+1, N):
+        self.A[:, j] -= utils.projection(self.A[:, j], self.A[:, i])
+    self.Q = self.A
+    self.R = np.dot(self.Q.T, self.R)
     return self.Q, self.R
 
   def householder(self, ret=True):
@@ -89,7 +105,7 @@ class QR:
     # of elementary unitary matrices Q on the left of A so
     # that the resulting matrix is upper-triangular
     for i in range(iters):
-      # select column
+      # select ith column
       c = self.A[i:M, i:i+1]
 
       # grab sign of first element in c

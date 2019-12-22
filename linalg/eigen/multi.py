@@ -54,6 +54,18 @@ def projected_iteration(A, k, max_iter=1000, sort=True):
   return eigvals, eigvecs
 
 
+def hessenberg(A):
+  """Reduce a matrix to Hessenberg form with Householder reflections.
+  """
+  A = np.array(A)
+  M = A.shape[1]
+  # loop through columns 0 to M-2
+  for col_idx in range(M-2):
+    # zero out components k+2,
+    break
+  return A
+
+
 def qr_algorithm(A):
   """The de-facto algorithm for finding all eigenpairs of a symmetric matrix.
 

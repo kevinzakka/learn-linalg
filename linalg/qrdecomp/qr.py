@@ -57,26 +57,21 @@ class QR:
     self.A = np.array(self.backup)
     M, N = self.A.shape
     self.R = np.array(self.A)
-
     self.A[:, 0] /= utils.l2_norm(self.A[:, 0])
-
-    # for each col
     for i in range(1, N):
-      # for each column on the left of current col
       for j in range(i):
-        # subtract out the projection of the i'th col onto the j'th one
         self.A[:, i] -= utils.projection(self.A[:, i], self.A[:, j])
-      # normalize
       utils.normalize(self.A[:, i], inplace=True)
-
-    # Q is now A, R = (Q.T)(A)
     self.Q = self.A
     self.R = np.dot(self.Q.T, self.R)
-
     return self.Q, self.R
 
   def gram_schmidt_modified(self):
     """Computes QR using the modified Gram-Schmidt method.
+
+    More numerically stable than the naive Gram-Schmidt method,
+    but there should be no reason to use this over the Householder
+    method.
     """
     self.A = np.array(self.backup)
     M, N = self.A.shape
@@ -86,7 +81,7 @@ class QR:
       for j in range(i+1, N):
         self.A[:, j] -= utils.projection(self.A[:, j], self.A[:, i])
     self.Q = self.A
-    self.R = np.dot(self.Q.T, self.R)
+    self.R = self.Q.T @ self.R
     return self.Q, self.R
 
   def householder(self, ret=True):

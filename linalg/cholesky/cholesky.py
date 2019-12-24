@@ -1,7 +1,8 @@
 import numpy as np
 
 from linalg.kahan import KahanSum
-from linalg.utils import is_symmetric, upper_diag
+from linalg.utils import upper_diag
+from linalg.eigen.utils import is_spd
 
 
 class Cholesky:
@@ -31,19 +32,14 @@ class Cholesky:
     L: a lower triangular numpy array of shape (N, N).
   """
   def __init__(self, A, crout=False):
+    error_msg = 'A must be symmetric positive definite.!'
+    assert is_spd(A), error_msg
+
     self.crout = crout
     if self.crout:
       self.R = np.array(A)
     else:
       self.R = upper_diag(np.array(A), diag=True)
-
-    # check that A is symmetric
-    error_msg = 'A must be symmetric!'
-    assert is_symmetric(A), error_msg
-
-    # TODO: add checking for positive definiteness
-    # this will be done by checking that eigenvalues
-    # are positive.
 
   def decompose(self, ret=True):
     N = len(self.R)

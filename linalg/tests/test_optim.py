@@ -10,16 +10,13 @@ class OptimTest(unittest.TestCase):
   """Tests various iterative linear solvers.
   """
   def test_gradient_descent(self):
-    A = random_spd(50)
-    b = np.random.randn(50)
+    A = random_spd(5)
+    b = np.random.randn(5)
 
     expected = Cholesky(A).solve(b)
     actual = GradientDescent(1000000).solve(A, b)
 
     self.assertTrue(np.allclose(expected, actual))
-
-  def test_conjugate_gradient(self):
-    pass
 
 
 if __name__ == "__main__":

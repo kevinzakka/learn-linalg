@@ -8,6 +8,11 @@ from linalg.cholesky import Cholesky
 class CholeskyDecompositionTest(unittest.TestCase):
   """Tests Cholesky decomposition.
   """
+  def test_fails_on_non_spd(self):
+    A = np.random.randn(5, 5)
+    with self.assertRaises(AssertionError):
+      Cholesky(A, crout=False)
+
   def test_decompose_no_crout(self):
     T = np.array([
       [4, 12, -16],

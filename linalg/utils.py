@@ -263,3 +263,9 @@ def is_symmetric(A):
   """
   return np.allclose(A, A.T)
 is_symm = is_symmetric
+
+
+def is_square(A):
+  """Returns True if A is square.
+  """
+  return A.shape[0] == A.shape[1]

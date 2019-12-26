@@ -8,6 +8,7 @@ np.set_printoptions(precision=3)
 
 
 if __name__ == "__main__":
-  M = np.random.randint(0, 4, size=(5, 5))
-  hess = hessenberg(M)
+  M = np.random.randint(0, 10, size=(5, 5)).astype("float32")
   print(M)
+  hess, vs = hessenberg(M)
+  print(hess)

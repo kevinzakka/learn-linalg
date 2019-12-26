@@ -55,15 +55,26 @@ def projected_iteration(A, k, max_iter=1000, sort=True):
 
 
 def hessenberg(A):
-  """Reduce a matrix to Hessenberg form with Householder reflections.
+  """Reduce a square matrix to upper Hessenberg form using Householder reflections.
   """
+  assert utils.is_square(A), "[!] Matrix must be square."
   A = np.array(A)
-  M = A.shape[1]
-  # loop through columns 0 to M-2
-  for col_idx in range(M-2):
-    # zero out components k+2,
-    break
-  return A
+  M, _ = A.shape
+  vs = []
+  for i in range(M-2):
+    a = A[i+1:, i]
+    c = utils.l2_norm(a)
+    s = utils.sign(a[0])
+    e = utils.basis_vec(0, len(a), flat=True)
+    v = a + s*c*e
+    vs.append(v)
+    # left transform
+    for j in range(i, M):
+      A[i+1:, j] = A[i+1:, j] - (2 * v.T @ A[i+1:, j]) / (v.T @ v) * v
+    # right transform
+    for j in range(M):
+      A[j, i+1:M] = A[j, i+1:M] - 2 * ((A[j, i+1:M].T @ v) / (v.T @ v)) * v.T
+  return A, vs
 
 
 def qr_algorithm(A):
@@ -77,7 +88,7 @@ def qr_algorithm(A):
       stacked column-wise.
   """
   assert utils.is_symmetric(A), "[!] Matrix must be symmetric."
-  pass
+  hess, vs = hessenberg(A)
 
 
 def eig(A, sort=True):

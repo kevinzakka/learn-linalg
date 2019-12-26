@@ -89,43 +89,34 @@ class QR:
     """
     self.A = np.array(self.backup)
     M, N = self.A.shape
+    K = min(M, N)
+
+    vs = []
+    for i in range(K):
+      # extract subdiagonal entries of column i
+      a = self.A[i:, i]
+
+      # construct reflection vector
+      c = utils.l2_norm(a)
+      s = utils.sign(a[0])
+      e = utils.basis_vec(0, len(a), flat=True)
+      v = a + s*c*e
+      vs.append(v)
+
+      # annihlate subdiagonal entries of all columns to the right
+      for j in range(i, K):
+        self.A[i:, j] -= (2 * v.T @ self.A[i:, j]) / (v.T @ v) * v
+
+    # construct Q implicitly
     self.Q = np.eye(M)
+    for i in range(M):
+      for j, v in enumerate(reversed(vs)):
+        self.Q[K-j-1:, i] -= (2 * v.T @ self.Q[K-j-1:, i]) / (v.T @ v) * v
 
-    if M == N:
-      iters = N - 1
-    else:
-      iters = N
-
-    # apply orthogonal triangularization, i.e. a succession
-    # of elementary unitary matrices Q on the left of A so
-    # that the resulting matrix is upper-triangular
-    for i in range(iters):
-      # select ith column
-      c = self.A[i:M, i:i+1]
-
-      # grab sign of first element in c
-      s = utils.sign(c[0])
-
-      # compute u
-      u = c + s*utils.l2_norm(c)*utils.basis_vec(0, M-i)
-
-      # reflect the submatrix with respect to u
-      self.A[i:M, i:N] = utils.reflection(self.A[i:M, i:N], u, apply=True)
-
-      # update Q (need to make more efficient)
-      Q = utils.reflection(self.A[i:M, i:N], u, apply=False)
-      Q = np.pad(Q, ((i, 0), (i, 0)), mode='constant')
-      for j in range(i):
-        Q[j, j] = 1.
-      self.Q = np.dot(Q, self.Q)
-
-    self.Q = self.Q.T
     self.R = self.A
-
     if self.reduce:
-      self.Q = self.Q[:, :N]
-      self.R = self.R[:N, :]
-
+      self.Q = self.Q[:, :K]
+      self.R = self.R[:K, :]
     if ret:
       return self.Q, self.R
 

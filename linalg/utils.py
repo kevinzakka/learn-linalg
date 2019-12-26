@@ -4,6 +4,31 @@ from linalg.kahan.sum import KahanSum
 from functools import reduce
 
 
+def projection(b, a):
+  """Compute the projection of b onto a.
+
+  The projection of b onto a is the orthogonal
+  projection of b onto a straight line parallel to a.
+  The projection is parallel to a, i.e. it is the product
+  of a constant called the scalar projection with a unit
+  vector in the direction of a:
+
+  `proj(b, a) = c * a = [(a.T b) /(a.T a)] * a`
+
+  Args:
+    b: a numpy array of shape (N, 1).
+    a: a numpy array of shape (N, 1).
+
+  Returns:
+    proj: a numpy array of shape (N, 1).
+  """
+  norm_sq = a @ a
+  if np.isclose(norm_sq, 1.):
+    return (a.T @ b) * a
+  c = (a @ b) / norm_sq
+  return c * a
+
+
 def reflection(x, u, apply=False):
   """Reflect the vector x over the vector u.
 
@@ -46,31 +71,6 @@ def reflection(x, u, apply=False):
     P = np.eye(N) - 2*np.dot(v, v.T)
 
     return P
-
-
-def projection(b, a):
-  """Compute the projection of b onto a.
-
-  The projection of b onto a is the orthogonal
-  projection of b onto a straight line parallel to a.
-  The projection is parallel to a, i.e. it is the product
-  of a constant called the scalar projection with a unit
-  vector in the direction of a:
-
-  `proj(b, a) = c * a = [(a.T b) /(a.T a)] * a`
-
-  Args:
-    b: a numpy array of shape (N, 1).
-    a: a numpy array of shape (N, 1).
-
-  Returns:
-    proj: a numpy array of shape (N, 1).
-  """
-  norm_sq = a @ a
-  if np.isclose(norm_sq, 1.):
-    return (a.T @ b) * a
-  c = (a @ b) / norm_sq
-  return c * a
 
 
 def normalize(x, inplace=False):
@@ -210,7 +210,7 @@ def multi_dot(l):
   return reduce(np.dot, l)
 
 
-def basis_vec(k, n):
+def basis_vec(k, n, flat=False):
   """Creates the k'th standard basis vector in R^n.
   """
   error_msg = "[!] k cannot exceed {}.".format(n)
@@ -218,6 +218,8 @@ def basis_vec(k, n):
 
   b = np.zeros([n, 1])
   b[k] = 1
+  if flat:
+    return b.flatten()
   return b
 
 

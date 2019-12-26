@@ -2,8 +2,9 @@ import unittest
 import numpy as np
 import numpy.linalg as LA
 
+from scipy.linalg import hessenberg as hessenberg_scipy
 from linalg.eigen import single, multi
-from linalg.utils import random_symmetric
+from linalg.utils import random_symmetric, is_symmetric
 
 
 class EigenTest(unittest.TestCase):
@@ -77,8 +78,40 @@ class EigenTest(unittest.TestCase):
     self.assertTrue(self.absallclose(actual_eigvecs, expected_eigvecs))
     self.assertTrue(self.absallclose(actual_eigvals, expected_eigvals))
 
+  def test_hessenberg_h(self):
+    M = np.random.rand(10, 10)
+
+    actual_hess = multi.hessenberg(M, calc_q=False)
+    expected_hess = hessenberg_scipy(M)
+
+    self.assertTrue(np.allclose(actual_hess, expected_hess))
+
+  def test_hessenberg_q(self):
+    M = np.random.rand(10, 10)
+
+    _, actual_Q = multi.hessenberg(M, calc_q=True)
+    _, expected_Q = hessenberg_scipy(M, calc_q=True)
+
+    self.assertTrue(np.allclose(actual_Q, expected_Q))
+
+  def test_hessenberg_symmetric_stays_symmetric(self):
+    M = random_symmetric(4)
+
+    hess = multi.hessenberg(M)
+    self.assertTrue(is_symmetric(hess))
+
   def test_qr_algorithm(self):
-    pass
+    M = random_symmetric(4)
+
+    eigvals, eigvecs = LA.eig(M)
+    idx = np.abs(eigvals).argsort()[::-1]
+    expected_eigvecs = eigvecs[:, idx]
+    expected_eigvals = eigvals[idx]
+
+    actual_eigvals, actual_eigvecs = multi.qr_algorithm(M, sort=True)
+
+    self.assertTrue(self.absallclose(actual_eigvecs, expected_eigvecs))
+    self.assertTrue(self.absallclose(actual_eigvals, expected_eigvals))
 
 
 if __name__ == '__main__':

@@ -37,8 +37,11 @@ def projected_iteration(A, k, max_iter=1000, sort=True):
         proj_sum += utils.projection(v, eigvecs[:, j])
       v -= proj_sum
 
-      v = A @ v
-      v /= utils.l2_norm(v)
+      v_new = A @ v
+      v_new /= utils.l2_norm(v_new)
+      if np.all(np.abs(v_new - v) < 1e-8):
+        break
+      v = v_new
     e = single.rayleigh_quotient(A, v)
 
     # store eigenpair
@@ -93,11 +96,13 @@ def hessenberg(A, calc_q=False):
   return A
 
 
-def qr_algorithm(A, sort=True):
+def qr_algorithm(A, hess=True, sort=True):
   """The de-facto algorithm for finding all eigenpairs of a symmetric matrix.
 
   Args:
     A: a square symmetric array of shape (N, N).
+    hess (bool): Whether to compute the Hessenberg form
+      of the matrix before starting the QR iterations.
     sort (bool): Whether to sort by decreasing eigenvalue magnitude.
 
   Returns:
@@ -106,10 +111,16 @@ def qr_algorithm(A, sort=True):
   """
   assert utils.is_symmetric(A), "[!] Matrix must be symmetric."
   backup = np.array(A)
-  A, Q = hessenberg(A, calc_q=True)
-  for k in range(10000):
-    Q, R = QR(A).decompose()
-    A = R @ Q
+  if hess:
+    A = hessenberg(A, calc_q=False)
+  M = A.shape[0]
+  for k in range(1000):
+    mu = A[M-1, M-1]  # set the shift to be the last diagonal element
+    Q, R = QR(A - mu * np.eye(M)).decompose()
+    A_new = R @ Q + mu * np.eye(M)
+    if np.all(np.abs(A_new - A) < 1e-8):
+      break
+    A = A_new
   mus = utils.diag(A)
   eigvecs = np.zeros_like(A)
   eigvals = np.zeros(A.shape[0])
@@ -127,6 +138,5 @@ def qr_algorithm(A, sort=True):
 def eig(A, sort=True):
   """Compute the eigenvalues and right eigenvectors of a symmetric matrix.
   """
-  # TODO switch to qr when implemented
-  eigvals, eigvecs = projected_iteration(A, len(A), sort=sort)
+  eigvals, eigvecs = qr_algorithm(A, hess=True, sort=sort)
   return eigvals, eigvecs

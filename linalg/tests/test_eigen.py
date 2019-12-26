@@ -30,8 +30,8 @@ class EigenTest(unittest.TestCase):
 
     actual_eigval, actual_eigvec = single.power_iteration(M, 1000)
 
-    self.assertTrue(self.absallclose(actual_eigvec, expected_eigvec))
     self.assertTrue(self.absallclose(actual_eigval, expected_eigval))
+    self.assertTrue(self.absallclose(actual_eigvec, expected_eigvec))
 
   def test_inverse_iteration(self):
     M = random_symmetric(3)
@@ -100,7 +100,7 @@ class EigenTest(unittest.TestCase):
     hess = multi.hessenberg(M)
     self.assertTrue(is_symmetric(hess))
 
-  def test_qr_algorithm(self):
+  def test_qr_algorithm_without_hessenberg(self):
     M = random_symmetric(4)
 
     eigvals, eigvecs = LA.eig(M)
@@ -108,7 +108,20 @@ class EigenTest(unittest.TestCase):
     expected_eigvecs = eigvecs[:, idx]
     expected_eigvals = eigvals[idx]
 
-    actual_eigvals, actual_eigvecs = multi.qr_algorithm(M, sort=True)
+    actual_eigvals, actual_eigvecs = multi.qr_algorithm(M, hess=False)
+
+    self.assertTrue(self.absallclose(actual_eigvecs, expected_eigvecs))
+    self.assertTrue(self.absallclose(actual_eigvals, expected_eigvals))
+
+  def test_qr_algorithm_with_hessenberg(self):
+    M = random_symmetric(4)
+
+    eigvals, eigvecs = LA.eig(M)
+    idx = np.abs(eigvals).argsort()[::-1]
+    expected_eigvecs = eigvecs[:, idx]
+    expected_eigvals = eigvals[idx]
+
+    actual_eigvals, actual_eigvecs = multi.qr_algorithm(M)
 
     self.assertTrue(self.absallclose(actual_eigvecs, expected_eigvecs))
     self.assertTrue(self.absallclose(actual_eigvals, expected_eigvals))

@@ -37,12 +37,20 @@ class QRTest(unittest.TestCase):
 
     self.assertTrue(all(np.allclose(a, e) for a, e in zip(actual, expected)))
 
+  def test_householder_symmetric(self):
+    T = np.random.randn(10, 10)
+
+    Q, R = QR(T, reduce=False).householder()
+
+    self.assertTrue(np.allclose(Q @ R, T))
+
   def test_householder_complete(self):
     T = np.random.randn(100, 60)
 
     actual = QR(T, reduce=False).householder()
     expected = LA.qr(T, mode='complete')
 
+    self.assertTrue(np.allclose(actual[0]@actual[1], T))
     self.assertTrue(all(np.allclose(a, e) for a, e in zip(actual, expected)))
 
   def test_householder_reduce(self):
@@ -51,6 +59,7 @@ class QRTest(unittest.TestCase):
     actual = QR(T, reduce=True).householder()
     expected = LA.qr(T, mode='reduced')
 
+    self.assertTrue(np.allclose(actual[0]@actual[1], T))
     self.assertTrue(all(np.allclose(a, e) for a, e in zip(actual, expected)))
 
   def test_solve_single_complete(self):

@@ -20,8 +20,11 @@ def power_iteration(A, max_iter=1000):
   assert utils.is_symmetric(A), "[!] Matrix must be symmetric."
   v = np.random.randn(A.shape[0])
   for i in range(max_iter):
-    v = A @ v
-    v /= utils.l2_norm(v)
+    v_new = A @ v
+    v_new /= utils.l2_norm(v_new)
+    if np.all(np.abs(v_new - v) < 1e-8):
+      break
+    v = v_new
   e = rayleigh_quotient(A, v)
   return e, v
 
@@ -39,8 +42,11 @@ def inverse_iteration(A, max_iter=1000):
   v = np.random.randn(A.shape[0])
   PLU = LU(A, pivoting='partial').decompose()
   for i in range(max_iter):
-    v = solve(PLU, v)
-    v /= utils.l2_norm(v)
+    v_new = solve(PLU, v)
+    v_new /= utils.l2_norm(v_new)
+    if np.all(np.abs(v_new - v) < 1e-8):
+      break
+    v = v_new
   e = rayleigh_quotient(A, v)
   return e, v
 
@@ -58,8 +64,11 @@ def rayleigh_quotient_iteration(A, mu, max_iter=1000):
   assert utils.is_symmetric(A), "[!] Matrix must be symmetric."
   v = np.random.randn(A.shape[0])
   for i in range(max_iter):
-    v = solve(A - mu*np.eye(A.shape[0]), v)
-    v /= utils.l2_norm(v)
+    v_new = solve(A - mu*np.eye(A.shape[0]), v)
+    v_new /= utils.l2_norm(v_new)
+    if np.all(np.abs(v_new - v) < 1e-8):
+      break
+    v = v_new
     mu = rayleigh_quotient(A, v)
   return mu, v
 

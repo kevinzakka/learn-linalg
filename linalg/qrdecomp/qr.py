@@ -104,14 +104,16 @@ class QR:
       vs.append(v)
 
       # annihlate subdiagonal entries of all columns to the right
-      for j in range(i, K):
-        self.A[i:, j] -= (2 * v.T @ self.A[i:, j]) / (v.T @ v) * v
+      if not np.isclose(v.T @ v, 0):
+        for j in range(i, K):
+          self.A[i:, j] -= (2 * v.T @ self.A[i:, j]) / (v.T @ v) * v
 
     # construct Q implicitly
     self.Q = np.eye(M)
     for i in range(M):
       for j, v in enumerate(reversed(vs)):
-        self.Q[K-j-1:, i] -= (2 * v.T @ self.Q[K-j-1:, i]) / (v.T @ v) * v
+        if not np.isclose(v.T @ v, 0):
+          self.Q[K-j-1:, i] -= (2 * v.T @ self.Q[K-j-1:, i]) / (v.T @ v) * v
 
     self.R = self.A
     if self.reduce:

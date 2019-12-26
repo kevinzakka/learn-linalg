@@ -64,8 +64,9 @@ def determinant(X, log=False):
 def determinant_abs(X):
   """Computes the absolute value of the determinant of a square matrix A.
   """
-  Q, R = QR(X, reduce=True).householder()
+  Q, R = QR(X, reduce=False).householder()
   det = 1
   for i in range(len(R)):
+    print(R[i, i])
     det *= R[i, i]
   return det

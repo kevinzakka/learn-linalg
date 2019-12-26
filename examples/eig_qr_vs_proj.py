@@ -1,6 +1,4 @@
-"""This script illustrates how computing the Hessenberg
-form of a matrix can help gain a speedup in computing
-its eigenpairs using the QR algorithm.
+"""QR algorithm vs projected iteration.
 """
 
 import time
@@ -13,19 +11,16 @@ from linalg import utils
 
 
 if __name__ == "__main__":
-  M = utils.random_spd(30)
-
-  tic = time.time()
-  eigvals, eigvecs = multi.qr_algorithm(M, hess=True)
-  toc = time.time()
-  time_with_hess = toc - tic
-  print("With hessenberg: {}s".format(time_with_hess))
+  M = utils.random_spd(10)
 
   tic = time.time()
   eigvals, eigvecs = multi.qr_algorithm(M, hess=False)
   toc = time.time()
-  time_without_hess = toc - tic
-  print("Without hessenberg: {}s".format(time_without_hess))
+  time_qr = toc - tic
+  print("QR: {}s".format(time_qr))
 
-  speedup = time_without_hess / time_with_hess
-  print("Speedup: {}x".format(speedup))
+  tic = time.time()
+  eigvals, eigvecs = multi.projected_iteration(M, len(M))
+  toc = time.time()
+  time_proj = toc - tic
+  print("Projected Iteration: {}s".format(time_proj))

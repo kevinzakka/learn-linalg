@@ -30,7 +30,6 @@ Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/ma
 
 ## Todos
 
-- Implement QR algorithm with Wilkinson shifts.
 - Implement SVD.
 - Implement conjugate gradient.
 - Make a deblurify application using conjugate gradient.

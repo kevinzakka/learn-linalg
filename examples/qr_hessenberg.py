@@ -1,6 +1,8 @@
 """This script illustrates how computing the Hessenberg
 form of a matrix can help gain a speedup in computing
 its eigenpairs using the QR algorithm.
+
+TODO: Currently not showing any speedups, need to debug why.
 """
 
 import time

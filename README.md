@@ -12,10 +12,11 @@ Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/ma
 - [determinant](https://github.com/kevinzakka/learn-linalg/blob/master/linalg/misc/determinant.py): compute the determinant (or log det) of a square matrix A using PLU factorization.
 - [inverse](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/misc/inverse.py): compute the inverse of a square matrix A using PLU factorization.
 - [cholesky](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/cholesky): cholesky decomposition for symmetric positive definite matrices A.
-- [qrdecomp](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/qrdecomp): QR decomposition of any matrix A using `gram-schmidt` or `householder`.
+- [qrdecomp](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/qrdecomp): `QR` decomposition of any matrix A using gram-schmidt or householder.
 - [solve](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/solver): solve `Ax=b` using PLU decomposition.
 - [lstsq](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/lstsq): solve least squares using QR decomposition.
-- [eigen](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/eigen): single and multi eigenvalue finding algorithms.
+- [eigen](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/eigen): single and multi eigenvalue finding algorithms, hessenberg factorization and the qr algorithm.
+- [svd](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/svd): `SVD` singular value decomposition of any matrix A.
 
 ## Applications
 
@@ -30,6 +31,4 @@ Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/ma
 
 ## Todos
 
-- Implement SVD.
-- Implement conjugate gradient.
-- Make a deblurify application using conjugate gradient.
+- Make QR decomposition more efficient for Hessenberg matrices.

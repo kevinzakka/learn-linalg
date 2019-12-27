@@ -2,19 +2,14 @@ import time
 import numpy as np
 import numpy.linalg as LA
 
-from scipy.linalg import hessenberg
 from linalg import utils
-from linalg.qrdecomp import QR
-from linalg.eigen import single, multi
+from linalg.svd import SVD
 
 np.set_printoptions(precision=3)
 
 
 if __name__ == "__main__":
-  A = utils.random_symmetric(5)
-
-  tic = time.time()
-  hess = multi.hessenberg(A)
-  toc = time.time()
-  print(hess)
-  assert utils.is_symm(hess), "[!] Hessenberg of symmetric isn't symmetric."
+  A = np.random.randn(7, 5)
+  # A = utils.random_symmetric(3)
+  U, S, V = SVD(A).decompose()
+  assert np.allclose(U@S@V.T, A)

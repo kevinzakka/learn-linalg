@@ -140,6 +140,7 @@ class QR:
     for x by back substitution, where `y = Q.Tb`.
     """
     M, N = self.R.shape
+    K = min(M, N)
     self.y = np.dot(self.Q.T, self.b)
 
     if self.y.ndim == 1:
@@ -153,9 +154,9 @@ class QR:
     self.x = np.zeros([N, num_iters])
 
     for k in range(num_iters):
-      for i in range(N-1, -1, -1):
+      for i in range(K-1, -1, -1):
         acc = KahanSum()
-        for j in range(N-1, i, -1):
+        for j in range(K-1, i, -1):
           acc.add(self.R[i, j]*self.x[j, k])
         self.x[i, k] = (self.y[i, k] - acc.cur_sum()) / (self.R[i, i])
 

@@ -3,6 +3,7 @@ import numpy as np
 import numpy.linalg as LA
 
 from scipy.linalg import hessenberg as hessenberg_scipy
+
 from linalg.eigen import single, multi
 from linalg.utils import random_symmetric, is_symmetric
 
@@ -28,7 +29,7 @@ class EigenTest(unittest.TestCase):
 
     expected_eigval, expected_eigvec = self.np_eig(M)
 
-    actual_eigval, actual_eigvec = single.power_iteration(M, 1000)
+    actual_eigval, actual_eigvec = single.power_iteration(M)
 
     self.assertTrue(self.absallclose(actual_eigval, expected_eigval))
     self.assertTrue(self.absallclose(actual_eigvec, expected_eigvec))
@@ -38,7 +39,7 @@ class EigenTest(unittest.TestCase):
 
     expected_eigval, expected_eigvec = self.np_eig(M, largest=False)
 
-    actual_eigval, actual_eigvec = single.inverse_iteration(M, 10000)
+    actual_eigval, actual_eigvec = single.inverse_iteration(M)
 
     self.assertTrue(self.absallclose(actual_eigvec, expected_eigvec))
     self.assertTrue(self.absallclose(actual_eigval, expected_eigval))
@@ -48,7 +49,7 @@ class EigenTest(unittest.TestCase):
 
     expected_eigval, expected_eigvec = self.np_eig(M)
 
-    initial_eigval = single.power_iteration(M, 50)[0]
+    initial_eigval = single.power_iteration(M)[0]
     actual_eigval, actual_eigvec = single.rayleigh_quotient_iteration(M, initial_eigval)
 
     self.assertTrue(self.absallclose(actual_eigvec, expected_eigvec))
@@ -59,7 +60,7 @@ class EigenTest(unittest.TestCase):
 
     expected_eigval, expected_eigvec = self.np_eig(M, largest=False)
 
-    initial_eigval = single.inverse_iteration(M, 50)[0]
+    initial_eigval = single.inverse_iteration(M)[0]
     actual_eigval, actual_eigvec = single.rayleigh_quotient_iteration(M, initial_eigval)
 
     self.assertTrue(self.absallclose(actual_eigvec, expected_eigvec))

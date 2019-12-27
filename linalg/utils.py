@@ -102,18 +102,14 @@ def norm(x, p):
   """Returns the p norm of a vector.
   """
   v = np.array(x).flatten()
-
   error_msg = "x must be 1D"
   assert v.ndim == 1, error_msg
   error_msg = "p must be >= 1"
   assert p >= 1, error_msg
-
   N = v.shape[0]
-
   summer = KahanSum()
   for i in range(N):
     summer.add(np.power(np.abs(v[i]), p))
-
   return np.power(summer.cur_sum(), 1./p)
 
 
@@ -138,14 +134,12 @@ def upper_diag(A, diag=False):
   """
   m = len(A)
   U = np.zeros_like(A)
-
   for i in range(m):
     l_b = i + 1
     if diag:
       l_b = i
     for j in range(l_b, m):
       U[i, j] = A[i, j]
-
   return U
 
 
@@ -154,14 +148,12 @@ def lower_diag(A, diag=False):
   """
   m = len(A)
   L = np.zeros_like(A)
-
   for i in range(m):
     u_b = i
     if diag:
       u_b = i + 1
     for j in range(0, u_b):
       L[i, j] = A[i, j]
-
   return L
 
 
@@ -170,10 +162,8 @@ def diag(A):
   """
   N = len(A)
   D = np.zeros([N, 1])
-
   for i in range(N):
     D[i] = A[i, i]
-
   return D
 
 
@@ -182,10 +172,8 @@ def create_diag(x):
   """
   N = x.shape[0]
   D = np.zeros([N, N])
-
   for i in range(N):
     D[i, i] = x[i]
-
   return D
 
 
@@ -193,10 +181,8 @@ def unit_diag(A):
   """Fills the diagonal elements of a square matrix A with 1's.
   """
   m = len(A)
-
   for i in range(m):
     A[i, i] = 1
-
   return A
 
 
@@ -215,7 +201,6 @@ def basis_vec(k, n, flat=False):
   """
   error_msg = "[!] k cannot exceed {}.".format(n)
   assert (k < n), error_msg
-
   b = np.zeros([n, 1])
   b[k] = 1
   if flat:
@@ -229,7 +214,6 @@ def basis_arr(ks, n):
   """
   error_msg = "[!] ks cannot exceed {}.".format(n)
   assert (np.max(ks) < n), error_msg
-
   b = np.zeros([n, n])
   for i, k in enumerate(ks):
     b[i, k] = 1

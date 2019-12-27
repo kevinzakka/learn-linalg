@@ -2,23 +2,28 @@
 form of a matrix can help gain a speedup in computing
 its eigenpairs using the QR algorithm.
 
-TODO: Currently not showing any speedups, need to debug why.
+Note: Currently not getting any speedups because of how
+my code uses a mix of for loops and numpy vectorization.
+Specifically, the QR decomposition doesn't take advantage
+of the Hessenberg form by skipping row elements that are
+already zero when applying reflectors to each column
+of the matrix.
 """
 
 import time
 
 import numpy as np
-import numpy.linalg as LA
+import scipy.linalg as LA
 
 from linalg.eigen import multi
 from linalg import utils
 
 
 if __name__ == "__main__":
-  M = utils.random_spd(30)
+  M = utils.random_spd(10)
 
   tic = time.time()
-  eigvals, eigvecs = multi.qr_algorithm(M, hess=True)
+  eigvals, eigvecs = multi.qr_algorithm(LA.hessenberg(M), hess=False)
   toc = time.time()
   time_with_hess = toc - tic
   print("With hessenberg: {}s".format(time_with_hess))

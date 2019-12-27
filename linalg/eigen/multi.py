@@ -38,7 +38,7 @@ def projected_iteration(A, k, max_iter=1000, sort=True):
       v -= proj_sum
 
       v_new = A @ v
-      v_new /= utils.l2_norm(v_new)
+      v_new = utils.normalize(v_new)
       if np.all(np.abs(v_new - v) < 1e-8):
         break
       v = v_new
@@ -60,6 +60,9 @@ def projected_iteration(A, k, max_iter=1000, sort=True):
 def hessenberg(A, calc_q=False):
   """Reduce a square matrix to upper Hessenberg form using Householder reflections.
 
+  If the input matrix is symmetric, the resulting Hessenberg form is
+  reduced to tridiagonal form.
+
   Args:
     A: A square matrix of shape (M, M).
     calc_q (bool): Whether to explicitly compute the product of
@@ -71,6 +74,7 @@ def hessenberg(A, calc_q=False):
       returned if `calc_q=True`.
   """
   assert utils.is_square(A), "[!] Matrix must be square."
+  is_symm = utils.is_symmetric(A)
   A = np.array(A)
   M, _ = A.shape
   vs = []
@@ -85,7 +89,7 @@ def hessenberg(A, calc_q=False):
     for j in range(i, M):
       A[i+1:, j] = A[i+1:, j] - (2 * v.T @ A[i+1:, j]) / (v.T @ v) * v
     # right transform
-    for j in range(M):
+    for j in range(i if is_symm else 0, M):
       A[j, i+1:M] = A[j, i+1:M] - 2 * ((A[j, i+1:M].T @ v) / (v.T @ v)) * v.T
   if calc_q:
     Q = np.eye(M)

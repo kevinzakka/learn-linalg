@@ -167,13 +167,14 @@ def diag(A):
   return D
 
 
-def create_diag(x):
-  """Create a square matrix whose diagonal elements are the elements of x.
+def create_diag(xs, shape=None):
+  """Create a matrix whose diagonal elements are the elements of x.
   """
-  N = x.shape[0]
-  D = np.zeros([N, N])
-  for i in range(N):
-    D[i, i] = x[i]
+  if shape is None:
+    shape = (xs.shape[0], xs.shape[0])
+  D = np.zeros(shape)
+  for i, x in enumerate(xs):
+    D[i, i] = x
   return D
 
 

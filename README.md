@@ -16,7 +16,7 @@ Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/ma
 - [solve](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/solver): solve `Ax=b` using PLU decomposition.
 - [lstsq](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/lstsq): solve least squares using QR decomposition.
 - [eigen](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/eigen): single and multi eigenvalue finding algorithms, hessenberg factorization and the qr algorithm.
-- [svd](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/svd): `SVD` singular value decomposition of any matrix A.
+- [svd](https://github.com/kevinzakka/learn-linalg/tree/master/linalg/svd): singular value decomposition `SVD` of any matrix A.
 
 ## Applications
 
@@ -31,4 +31,6 @@ Feel free to read the [notes](https://github.com/kevinzakka/learn-linalg/blob/ma
 
 ## Todos
 
-- Make QR decomposition more efficient for Hessenberg matrices.
+- [ ] Make QR decomposition more efficient for Hessenberg matrices.
+- [ ] Implement QR decomposition with Givens rotations.
+- [ ] Implement conjugate gradient algorithm.

@@ -12,8 +12,8 @@ class SVD:
   """Computes the Singular Value Decomposition of an `m x n` matrix A.
 
   The matrix A is factorized into a product of three matrices: (1) an
-  orthogonal matrix U, (2) a diagonal matrix sigma and (3) an orthogonal
-  matrix V, such that `A = U Σ V^T`.
+  orthogonal matrix U, (2) a diagonal matrix Σ and (3) an orthogonal
+  matrix V, such that `A = U x Σ x V^T`.
 
   The SVD decomposition exists for any matrix, even if it is not
   symmetric or square.

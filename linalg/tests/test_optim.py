@@ -7,14 +7,25 @@ from linalg.utils import random_spd
 
 
 class OptimTest(unittest.TestCase):
-  """Tests various iterative linear solvers.
-  """
+  """Tests various iterative linear solvers."""
+
   def test_gradient_descent(self):
+    max_iters = 100_000
     A = random_spd(5)
     b = np.random.randn(5)
 
     expected = Cholesky(A).solve(b)
-    actual = GradientDescent(1000000).solve(A, b)
+    actual = GradientDescent(max_iters).solve(A, b)
+
+    self.assertTrue(np.allclose(expected, actual))
+
+  def test_conjugate_gradient(self):
+    max_iters = 100_000
+    A = random_spd(5)
+    b = np.random.randn(5)
+
+    expected = Cholesky(A).solve(b)
+    actual = ConjugateGradient(max_iters).solve(A, b)
 
     self.assertTrue(np.allclose(expected, actual))
 

@@ -1,7 +1,8 @@
 import numpy as np
 
-from linalg.kahan.sum import KahanSum
 from functools import reduce
+
+from linalg.kahan.sum import KahanSum
 
 
 def projection(b, a):
@@ -99,7 +100,7 @@ def inf_norm(x):
 
 
 def norm(x, p):
-  """Returns the p norm of a vector.
+  """Returns the p-norm of a vector.
   """
   v = np.array(x).flatten()
   error_msg = "x must be 1D"
@@ -110,7 +111,7 @@ def norm(x, p):
   summer = KahanSum()
   for i in range(N):
     summer.add(np.power(np.abs(v[i]), p))
-  return np.power(summer.cur_sum(), 1./p)
+  return np.power(summer.result(), 1./p)
 
 
 def sign(x):

@@ -4,131 +4,94 @@ import numpy as np
 class KahanSum:
   """Precise summation of finite-precision floating point numbers [1].
 
-  Reduces numerical error by storing a running compensation term
-  that captures lost low-order bits.
+  Reduces numerical error by storing a running compensation term that captures
+  lost low-order bits.
 
   References:
     [1]: https://en.wikipedia.org/wiki/Kahan_summation_algorithm
   """
   def __init__(self):
-    """Initializes the KahanSum object.
+    """Constructor."""
+    self.reset()
 
-    Creates 2 variables: one for keeping track of the sum
-    and one for storing the moving compensation term.
-    """
-    self.sum = 0.
-    self.c = 0.
+  def reset(self):
+    """Clears the internal state."""
+    # Create one variable for keeping track of the sum and one for storing the
+    # moving compensation term.
+    self._sum = 0
+    self._compensation = 0
 
   def add(self, x):
-    """Adds the float x to the sum term.
-    """
-    # add back compensation
-    x += self.c
+    """Adds the float x to the summation term."""
+    x += self._compensation
+    sum = self._sum + x
+    self.compensation = x - (sum - self._sum)
+    self._sum = sum
 
-    # add to sum
-    sum = self.sum + x
-
-    # update compensation
-    self.c = x - (sum - self.sum)
-
-    # update sum
-    self.sum = sum
-
-    return self.sum
-
-  def cur_sum(self):
-    return self.sum
+  def result(self):
+    return self._sum
 
 
 def kahan_sum(x, axis=None, keepdims=False):
-  """Kahan summation of a list of floating point numbers.
+  """Kahan summation for 1 and 2D arrays.
 
   Args:
-    x: a numpy ndarray of (M, N)
-    axis: the axis which will be collapsed to perform the summation.
-      None: sums all the elements in x.
-      0: sums the elements in each column and returns a sum
-        of shape (N,).
-      1: sums the elements in each row and returns a sum
-        of shape (M, ).
-    keepdims: bool specifying whether to keep the collapsed axis
-      with a value of 1.
+    x: A 1D or 2D array-like object.
+    axis: The axis which will be collapsed to perform the summation.
+    keepdims: A bool specifying whether to keep the collapsed axis.
 
   Returns:
-    sum: kahan summation of x.
+    The kahan summation of x.
   """
+  # Ensure the array-like object is at most 2D.
   x = np.asarray(x)
-
   error_msg = "[!] Only 1D and 2D arrays are currently supported."
   assert (x.ndim <= 2), error_msg
 
-  # 1D case
+  # Sanity check axis args.
+  error_msg = "[!] Axis value can only be None, 0 or 1."
+  assert (axis in [None, 0, 1]), error_msg
+
+  # Instantiate summation object.
+  summation = KahanSum()
+
+  # 1D case.
   if x.ndim == 1:
-    N = len(x)
-
-    # instantiate a single KahanSum object
-    summation = KahanSum()
-
-    # loop over rows and columns of x:
-    for i in range(N):
+    for i in range(len(x)):
       summation.add(x[i])
+    return summation.result()
 
-    return summation.cur_sum()
+  # 2D case.
+  num_rows, num_cols = x.shape
 
-  # 2D case
+  if axis is None:
+    for i in range(num_rows):
+      for j in range(num_cols):
+        summation.add(x[i, j])
+    result = summation.result()
+
+  elif axis == 0:
+    # This list will hold num_cols sums.
+    sums = []
+    for i in range(num_cols):
+      summation.reset()
+      for j in range(num_rows):
+        summation.add(x[j, i])
+      sums.append(summation.result())
+    result = np.asarray(sums)
+    if keepdims:
+      result = result.reshape([1, num_cols])
+
   else:
-    num_rows, num_cols = x.shape
+    # This list will hold num_rows sums.
+    sums = []
+    for i in range(num_rows):
+      summation.reset()
+      for j in range(num_cols):
+        summation.add(x[i, j])
+      sums.append(summation.result())
+    result = np.asarray(sums)
+    if keepdims:
+      result = result.reshape([num_rows, 1])
 
-    if axis is None:
-      # instantiate a single KahanSum object
-      summation = KahanSum()
-
-      # loop over rows and columns of x:
-      for i in range(num_rows):
-        for j in range(num_cols):
-          summation.add(x[i, j])
-
-      return summation.cur_sum()
-
-    elif axis == 0:
-      # this list will hold num_cols sums
-      sums = []
-
-      # loop over columns of x
-      for i in range(num_cols):
-        # instantiate a KahanSum object
-        summation = KahanSum()
-
-        # loop over rows of x:
-        for j in range(num_rows):
-          summation.add(x[j, i])
-
-        sums.append(summation.cur_sum())
-
-      summation = np.asarray(sums)
-      if keepdims:
-        summation = summation.reshape([1, num_cols])
-      return summation
-
-    elif axis == 1:
-      # this list will hold num_rows sums
-      sums = []
-
-      # loop over rows of x
-      for i in range(num_rows):
-        # instantiate a KahanSum object
-        summation = KahanSum()
-
-        # loop over columns of x:
-        for j in range(num_cols):
-          summation.add(x[i, j])
-
-        sums.append(summation.cur_sum())
-
-      summation = np.asarray(sums)
-      if keepdims:
-        summation = summation.reshape([num_rows, 1])
-      return summation
-
-    else:
-      raise ValueError("Axis value can only be None, 0 or 1.")
+  return result

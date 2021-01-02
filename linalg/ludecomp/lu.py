@@ -218,9 +218,9 @@ class LU:
         for j in range(i):
           acc.add(self.L[i, j]*self.y[j, k])
         if self.b.ndim > 1:
-          self.y[i, k] = right_hand[i, k] - acc.cur_sum()
+          self.y[i, k] = right_hand[i, k] - acc.result()
         else:
-          self.y[i, k] = right_hand[i] - acc.cur_sum()
+          self.y[i, k] = right_hand[i] - acc.result()
 
   def _backward(self):
     """Solve the upper triangular system Ux = y
@@ -240,7 +240,7 @@ class LU:
         acc = KahanSum()
         for j in range(N-1, i, -1):
           acc.add(self.U[i, j]*self.x[j, k])
-        self.x[i, k] = (self.y[i, k] - acc.cur_sum()) / (self.U[i, i] + 1e-10)  # prevent division by 0
+        self.x[i, k] = (self.y[i, k] - acc.result()) / (self.U[i, i] + 1e-10)  # prevent division by 0
 
     if self.b.ndim == 1:
       self.x = self.x.squeeze()

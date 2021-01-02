@@ -158,7 +158,7 @@ class QR:
         acc = KahanSum()
         for j in range(K-1, i, -1):
           acc.add(self.R[i, j]*self.x[j, k])
-        self.x[i, k] = (self.y[i, k] - acc.cur_sum()) / (self.R[i, i])
+        self.x[i, k] = (self.y[i, k] - acc.result()) / (self.R[i, i])
 
     if self.b.ndim == 1:
       self.x = self.x.squeeze()

@@ -33,7 +33,7 @@ def inverse(A):
       summer = KahanSum()
       for k in range(i):
         summer.add(L[i, k]*y[k, j])
-      sum = summer.cur_sum()
+      sum = summer.result()
       y[i, j] = (P[i, j] - sum) / (L[i, i])
 
   # solve Ux = y for x
@@ -43,7 +43,7 @@ def inverse(A):
       summer = KahanSum()
       for k in range(N-1, i, -1):
         summer.add(U[i, k]*x[k, j])
-      sum = summer.cur_sum()
+      sum = summer.result()
       x[i, j] = (y[i, j] - sum) / (U[i, i])
 
   return x

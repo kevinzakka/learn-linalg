@@ -52,7 +52,7 @@ class Cholesky:
           summer = KahanSum()
           for k in range(j):
             summer.add(self.L[i, k] * self.L[j, k])
-          sum = summer.cur_sum()
+          sum = summer.result()
 
           if (i == j):
             self.L[j, j] = np.sqrt(self.R[j, j] - sum)
@@ -118,10 +118,10 @@ class Cholesky:
           acc.add(self.L[i, j]*self.y[j, k])
         if self.b.ndim > 1:
           self.y[i, k] = \
-            (self.b[i, k] - acc.cur_sum()) / (self.L[i, i])
+            (self.b[i, k] - acc.result()) / (self.L[i, i])
         else:
           self.y[i, k] = \
-            (self.b[i] - acc.cur_sum()) / (self.L[i, i])
+            (self.b[i] - acc.result()) / (self.L[i, i])
 
   def _backward(self):
     """Backward substitution.
@@ -144,7 +144,7 @@ class Cholesky:
         for j in range(N-1, i, -1):
           acc.add(self.L.T[i, j]*self.x[j, k])
         self.x[i, k] = \
-          (self.y[i, k] - acc.cur_sum()) / (self.L.T[i, i])
+          (self.y[i, k] - acc.result()) / (self.L.T[i, i])
 
     if self.b.ndim == 1:
       self.x = self.x.squeeze()
